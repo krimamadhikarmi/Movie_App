@@ -1,9 +1,8 @@
-import {FlatList, Image, Text, View} from 'react-native';
+import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import {useState, useEffect} from 'react';
 
-export function SeriesScreen() {
+export function SeriesScreen({navigation}) {
   const [topSeries, setTopSeries] = useState([]);
-
   useEffect(() => {
     fetch('https://api.themoviedb.org/3/trending/tv/day?language=en-US', {
       headers: {
@@ -17,19 +16,23 @@ export function SeriesScreen() {
       });
   }, []);
   return (
-    <View style={{backgroundColor:"white"}}>
+    <View style={{backgroundColor: 'white'}}>
       <FlatList
         keyExtractor={item => item.id}
         data={topSeries}
         renderItem={({item}) => (
           <View style={{alignItems: 'center'}}>
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
-              }}
-              style={{width: 200, height: 200,marginTop:10}}
-            />
-            <Text style={{fontWeight:'bold'}}>{item.original_name}</Text>
+            <TouchableOpacity onPress={()=>navigation.navigate('Series', { seriesId: item.id })}>
+              <View>
+                <Image
+                  source={{
+                    uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+                  }}
+                  style={{width: 200, height: 200, marginTop: 10}}
+                />
+                <Text style={{fontWeight: 'bold',alignSelf:"center",marginVertical:10}}>{item.original_name}</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         )}
       />

@@ -23,15 +23,13 @@ export function MovieTop({navigation}) {
   }, []);
 
   return (
-    <View>
-      <Text>Movies 
-         
-      </Text>
+    <View style={{backgroundColor:"white"}}>
+     
     <FlatList
       keyExtractor={item => item.id.toString()}
       data={topMovies}
       renderItem={({ item }) => (
-        <View style={{ marginVertical: 10, alignItems: 'center' }}>
+        <View style={{ alignItems:'center',marginVertical:10}}>
           <TouchableOpacity
               onPress={() => navigation.navigate('Show', { movieId: item.id })}
             >
@@ -41,7 +39,7 @@ export function MovieTop({navigation}) {
             }}
             style={{ width: 200, height: 300 }}
           />
-          <Text style={{ color: 'black', textAlign: 'center' }}>{item.original_title}</Text>
+          <Text style={{ color: 'black', textAlign: 'center',fontWeight:"bold"}}>{item.original_title}</Text>
           </TouchableOpacity>
         </View>
       )}
