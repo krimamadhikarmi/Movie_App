@@ -7,12 +7,15 @@ import MovieShow from './screen/MovieShow';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
-    <View style={{flex:1}}>
+    <View style={{flex: 1}}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Search">
-          <Stack.Screen name="Search" component={SearchScreen}
-           options={{title: 'Movie App'}} />
-          <Stack.Screen name="Show" component={MovieShow}/>
+          <Stack.Screen
+            name="Search"
+            component={SearchScreen}
+            options={{title: 'Movie App'}}
+          />
+          <Stack.Screen name='Show' component={MovieShow}/>
         </Stack.Navigator>
       </NavigationContainer>
     </View>

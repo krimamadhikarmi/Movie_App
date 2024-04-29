@@ -1,8 +1,10 @@
-// MovieList.js
+
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 
-const MovieList = ({ imageUrl,title,mid}) => {
+
+
+const MovieList = ({ imageUrl,title}) => {
   return (
     <View style={{ marginVertical: 10, alignItems: 'center' }}>
       <Image
@@ -10,7 +12,7 @@ const MovieList = ({ imageUrl,title,mid}) => {
         style={{ width: 200, height: 300 }}
       />
       <Text style={{ color: 'black', textAlign: 'center' }}>{title}</Text>
-      <Text style={{color:'black'}}>{mid}</Text>
+      
     </View>
   );
 };

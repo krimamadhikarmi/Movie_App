@@ -1,8 +1,10 @@
 import {useEffect, useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export function useMovie() {
   const [movies, setMovies] = useState([]);
   const [errorMessage, setError] = useState('');
+
 
   function searchApi(term) {
     fetch(
