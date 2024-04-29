@@ -1,8 +1,9 @@
 import {useEffect, useState} from 'react';
 import {View, Text, FlatList, Image} from 'react-native';
 
+
 export default function MovieShow({route,navigation}) {
-    const { movieId } = route.params;
+  const { movieId } = route.params;
 
   const [movie, setMovies] = useState([]);
 

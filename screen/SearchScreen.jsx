@@ -4,6 +4,8 @@ import { FlatList, Text, TouchableOpacity, View, StyleSheet } from 'react-native
 import { SearchBar } from '../components/SearchBar';
 import { useMovie } from '../hooks/useMovie';
 import MovieList from '../components/MovieList';
+import { MovieTop } from '../components/MovieTop';
+
 
 export default function SearchScreen({ navigation }) {
   const [term, setTerm] = useState('');

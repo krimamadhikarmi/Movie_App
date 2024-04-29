@@ -1,10 +1,11 @@
 import {Text, TextInput, View} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 export function SearchBar({term,onTermChange,onTermSubmit}) {
   return (
     <View>
-    
+      
       <TextInput
         style={{
           borderColor: 'black',
@@ -12,13 +13,16 @@ export function SearchBar({term,onTermChange,onTermSubmit}) {
           borderWidth: 1,
           backgroundColor: '#F0EEEE',
           borderRadius: 10,
+         
         }}
         placeholder="Search Items"
         value={term}
         onChangeText={newTerm=>onTermChange(newTerm)}
         onEndEditing={onTermSubmit}
         
+        
       />
+      
       <Text>{term}</Text>
       
     </View>

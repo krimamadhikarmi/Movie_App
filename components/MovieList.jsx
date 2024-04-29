@@ -2,8 +2,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 
-
-
 const MovieList = ({ imageUrl,title}) => {
   return (
     <View style={{ marginVertical: 10, alignItems: 'center' }}>
