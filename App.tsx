@@ -2,6 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {View} from 'react-native';
 import SearchScreen from './screen/SearchScreen';
+import MovieShow from './screen/MovieShow';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -10,7 +11,8 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Search">
           <Stack.Screen name="Search" component={SearchScreen}
-           options={{title: 'Resturant'}} />
+           options={{title: 'Movie App'}} />
+          <Stack.Screen name="Show" component={MovieShow}/>
         </Stack.Navigator>
       </NavigationContainer>
     </View>
