@@ -39,7 +39,8 @@ export default function App() {
           <Stack.Screen name='Home' component={Home} options={{title: 'Movie App'}}/>
           <Stack.Screen
             name="Search"
-            component={SearchScreen}   
+            component={SearchScreen}
+               
           />
           <Stack.Screen name='Show' component={MovieShow}/>
           <Stack.Screen name='Series' component={SeriesShow}/>

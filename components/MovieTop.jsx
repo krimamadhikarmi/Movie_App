@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, View,TouchableOpacity} from 'react-native';
+import { FlatList, Image, Text, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export function MovieTop({navigation}) {
+export function MovieTop({ navigation }) {
   const [topMovies, setTopMovies] = useState([]);
 
   useEffect(() => {
@@ -17,33 +17,31 @@ export function MovieTop({navigation}) {
     )
       .then(response => response.json())
       .then(data => {
-       
         setTopMovies(data.results);
       });
   }, []);
 
   return (
-    <View style={{backgroundColor:"white"}}>
-     
-    <FlatList
-      keyExtractor={item => item.id.toString()}
-      data={topMovies}
-      renderItem={({ item }) => (
-        <View style={{ alignItems:'center',marginVertical:10}}>
-          <TouchableOpacity
-              onPress={() => navigation.navigate('Show', { movieId: item.id })}
-            >
-          <Image
-            source={{
-              uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
-            }}
-            style={{ width: 200, height: 300 }}
-          />
-          <Text style={{ color: 'black', textAlign: 'center',fontWeight:"bold"}}>{item.original_title}</Text>
+    <View style={{ flex: 1, backgroundColor: 'white', padding: 10 }}>
+      <FlatList
+        keyExtractor={item => item.id.toString()}
+        data={topMovies}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => navigation.navigate('Show', { movieId: item.id })}>
+            <View style={{ alignItems: 'center', marginVertical: 10, backgroundColor: 'white', borderRadius: 10, padding: 10 }}>
+              <Image
+                source={{
+                  uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+                }}
+                style={{ width: 300, height: 400, borderRadius: 10 }}
+              />
+              <Text style={{ color: 'black', textAlign: 'center', fontWeight: 'bold', marginTop: 5 }}>
+                {item.original_title}
+              </Text>
+            </View>
           </TouchableOpacity>
-        </View>
-      )}
-    />
-  </View>
+        )}
+      />
+    </View>
   );
 }

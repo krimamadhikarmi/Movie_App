@@ -7,7 +7,7 @@ const MovieList = ({ imageUrl,title}) => {
     <View style={{ marginVertical: 10, alignItems: 'center' }}>
       <Image
         source={{ uri: imageUrl }}
-        style={{ width: 200, height: 300 }}
+        style={{ width: 300, height: 300,borderRadius:10}}
       />
       <Text style={{ color: 'black', textAlign: 'center' }}>{title}</Text>
       
