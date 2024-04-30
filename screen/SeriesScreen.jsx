@@ -41,7 +41,7 @@ export function SeriesScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'black',
   },
   seriesItemContainer: {
     alignItems: 'center',
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 10,
+    backgroundColor:"black",
   },
   seriesImage: {
     width: 300,
@@ -59,5 +60,7 @@ const styles = StyleSheet.create({
   seriesTitle: {
     fontWeight: 'bold',
     alignSelf: 'center',
+    color:"red",
+    fontSize:20
   },
 });

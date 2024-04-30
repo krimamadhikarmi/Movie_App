@@ -22,20 +22,20 @@ export function MovieTop({ navigation }) {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'white', padding: 10 }}>
+    <View style={{ flex: 1, backgroundColor: 'black', padding: 10 }}>
       <FlatList
         keyExtractor={item => item.id.toString()}
         data={topMovies}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => navigation.navigate('Show', { movieId: item.id })}>
-            <View style={{ alignItems: 'center', marginVertical: 10, backgroundColor: 'white', borderRadius: 10, padding: 10 }}>
+            <View style={{ alignItems: 'center', marginVertical: 10, backgroundColor: 'black', borderRadius: 10, padding: 10 }}>
               <Image
                 source={{
                   uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
                 }}
                 style={{ width: 300, height: 400, borderRadius: 10 }}
               />
-              <Text style={{ color: 'black', textAlign: 'center', fontWeight: 'bold', marginTop: 5 }}>
+              <Text style={{ color: 'gray', textAlign: 'center', fontWeight: 'bold', marginTop: 5,fontSize:18 }}>
                 {item.original_title}
               </Text>
             </View>

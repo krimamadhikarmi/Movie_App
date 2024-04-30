@@ -20,16 +20,16 @@ export function SeriesShow({route}) {
 
   return (
     <View style={{alignItems:"center",backgroundColor:"black",flex:1}}>
+      <Text style={{color:"red",marginTop:10,fontSize:30,fontWeight:'bold'}}>{series.original_name}</Text>
       <Image
         source={{
           uri: `https://image.tmdb.org/t/p/w500${series.poster_path}`,
         }}
-        style={{width: 200, height: 200, marginTop: 50}}
+        style={{width: 300, height: 400, marginTop:30,marginBottom:30,borderRadius:10}}
       />
-      <Text style={{color:"white",margin:20}}>{series.original_name}</Text>
-      <Text  style={{color:"white",margin:5}}>Status: {series.status}</Text>
-      <Text  style={{color:"white",margin:5}}>{series.original_name}</Text>
-      <Text  style={{color:"white",margin:10}}>Overview:{series.overview}</Text>
+    
+    <Text  style={{color:"white",marginHorizontal:10,textAlign:'justify',margin:10}}>ID: {series.id}</Text>
+      <Text  style={{color:"white",marginHorizontal:10,textAlign:'justify'}}>{series.overview}</Text>
     </View>
   );
 }

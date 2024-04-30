@@ -9,13 +9,12 @@ export function SearchBar({ term, onTermChange, onTermSubmit }) {
         <Icon name="search" style={styles.icon} />
         <TextInput
           style={styles.input}
-          placeholder="Search Items"
+          placeholder="Search Movie"
           value={term}
           onChangeText={newTerm => onTermChange(newTerm)}
           onEndEditing={onTermSubmit}
         />
       </View>
-      <Text>{term}</Text>
     </View>
   );
 }
@@ -30,17 +29,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 1,
-    backgroundColor: '#F0EEEE',
+    backgroundColor: 'gray',
     borderRadius: 10,
   },
   input: {
     flex: 1,
     height: 40,
     marginLeft: 10,
+    color:"black"
   },
   icon: {
     fontSize: 20,
-    color: 'gray',
+    color: 'white',
     marginLeft: 10,
   },
 });

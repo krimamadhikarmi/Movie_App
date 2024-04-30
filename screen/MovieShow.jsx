@@ -21,29 +21,24 @@ export default function MovieShow({route,navigation}) {
   });
 
   return (
-    <View style={{alignItems:'center'}}>
-      <View style={{ marginVertical: 10, alignItems: 'center' }}>
+    <View style={{alignItems:'center',backgroundColor:"gray",flex:1}}>
+      <View style={{ marginVertical:20, alignItems: 'center' }}>
+        <Text style={{fontSize:20,margin:10,fontWeight:"bold",color:"white"}}>{movie.original_title}</Text>
           <Image
             source={{
               uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
             }}
-            style={{ width: 200, height: 300 }}
+            style={{ width: 300, height: 400,borderRadius:20 }}
           />
           
         </View>
    
-      <Text>Movie ID:{movie.id}</Text>
-      <Text>Original Language:{movie.original_language}</Text>
-      <Text>Overview:{movie.overview}</Text>
+      <Text style={{fontSize:18}}>Movie ID:{movie.id}</Text>
+      <Text style={{fontSize:15}}>Original Language: {movie.original_language}</Text>
+      <Text style={{fontSize:13,marginHorizontal:10,textAlign:"justify",marginTop:8}}>Overview:{movie.overview}</Text>
       
      
-      {/* <FlatList
-          keyExtractor={item => item.id.toString()}
-          data={movie}
-          renderItem={({item})=>(
-            <Text style={{ color: 'black', textAlign: 'center' }}>{item.id}</Text>
-        )}
-        /> */}
+      
     </View>
   );
 }

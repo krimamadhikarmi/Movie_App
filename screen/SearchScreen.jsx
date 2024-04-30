@@ -3,7 +3,7 @@ import { FlatList, Text, TouchableOpacity, View, StyleSheet } from 'react-native
 import { SearchBar } from '../components/SearchBar';
 import { useMovie } from '../hooks/useMovie';
 import MovieList from '../components/MovieList';
-import { MovieTop } from '../components/MovieTop';
+
 
 export default function SearchScreen({ navigation }) {
   const [term, setTerm] = useState('');
@@ -42,7 +42,7 @@ export default function SearchScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     padding: 10,
   },
   errorText: {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   movieItemContainer: {
     paddingHorizontal: 16,
     marginBottom: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     borderRadius: 10,
     paddingVertical: 10,
   },
