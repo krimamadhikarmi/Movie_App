@@ -40,7 +40,7 @@ function Home() {
         options={{tabBarIcon: () => <Icon name="tv" size={20} color="gray" />}}
       />
       <Tab.Screen
-        name="People"
+        name="Top People"
         component={TopPeople}
         options={{tabBarIcon: () => <Icon name="tv" size={20} color="gray" />}}
       />

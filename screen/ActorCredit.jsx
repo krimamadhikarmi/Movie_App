@@ -19,6 +19,12 @@ export default function ActorCredit({aid,navigation}) {
         setCredit(data.cast);
       });
   }, []);
+
+  const handleMoviePress = (movieId) => {
+    navigation.navigate('Show', { movieId }); 
+  };
+
+
   return (
     <View>
       <FlatList
@@ -28,7 +34,7 @@ export default function ActorCredit({aid,navigation}) {
         renderItem={({item}) => (
           <View style={styles.item}>
            
-            <TouchableOpacity >
+            <TouchableOpacity onPress={() => handleMoviePress(item.id)}>
             <Image
             source={{
               uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,

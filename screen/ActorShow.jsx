@@ -76,7 +76,7 @@ export default function ActorShow({route,navigation}) {
         Works
       </Text>
       <View style={{margin:10}}>
-        <ActorCredit aid={id} />
+        <ActorCredit aid={id} navigation={navigation}/>
       </View>
     </ScrollView>
   );

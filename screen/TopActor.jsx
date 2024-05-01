@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {View, Text, FlatList, Image, TouchableOpacity} from 'react-native';
+import {View, Text, FlatList, Image, TouchableOpacity,StyleSheet} from 'react-native';
 import ActorCredit from './ActorCredit';
 import ActorShow from './ActorShow';
 
@@ -23,10 +23,11 @@ export default function TopPeople({navigation}) {
   return (
     <View style={{backgroundColor: 'black'}}>
       <FlatList
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.name}
+        numColumns={2}
         data={people}
         renderItem={({item}) => (
-          <View style={{alignItems: 'center', margin: 20}}>
+          <View style={styles.item}>
             <TouchableOpacity onPress={() => navigation.navigate('Actor',{ id: item.id,movie:item.known_for})}>
               <Image
                 source={{
@@ -34,10 +35,10 @@ export default function TopPeople({navigation}) {
                 }}
                 style={{width: 100, height: 100, borderRadius: 60, margin: 8}}
               />
-              <Text style={{color: 'white', margin: 8, fontWeight: 'bold'}}>
+              <Text style={{color: 'white', margin: 8, fontWeight: 'bold',textAlign:"center"}}>
                 {item.name}
               </Text>
-              <Text style={{color: 'white'}}>{item.id}</Text>
+             
             </TouchableOpacity>
             
           </View>
@@ -46,3 +47,11 @@ export default function TopPeople({navigation}) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+    item: {
+        flex: 1,
+        maxWidth: "50%", 
+        alignItems: "center",
+    },
+})
