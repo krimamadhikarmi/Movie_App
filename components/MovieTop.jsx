@@ -64,7 +64,7 @@ export function MovieTop({ navigation }) {
           <Button
             title="All Movies"
             onPress={handleShowAllPress}
-            color={showAll ? 'purple' : 'gray'} // Change color based on state
+            color={showAll ? 'purple' : 'gray'} 
           />
         </View>
         <View style={{ borderRadius: 50, overflow: 'hidden' }}>
