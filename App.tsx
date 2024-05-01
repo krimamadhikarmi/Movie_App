@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {MovieTop} from './components/MovieTop';
 import {SeriesScreen} from './screen/SeriesScreen';
 import {SeriesShow} from './screen/SeriesShow';
-import TopPeople from './screen/TopActor';
+import TopPeople from './screen/TopActorScreen';
 
 import ActorCombine from './screen/Actor';
 

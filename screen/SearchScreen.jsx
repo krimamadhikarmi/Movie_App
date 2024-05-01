@@ -3,21 +3,35 @@ import { FlatList, Text, TouchableOpacity, View, StyleSheet } from 'react-native
 import { SearchBar } from '../components/SearchBar';
 import { useMovie } from '../hooks/useMovie';
 import MovieList from '../components/MovieList';
-
+import { Trending } from '../components/Trending';
 
 export default function SearchScreen({ navigation }) {
   const [term, setTerm] = useState('');
   const [movies, searchApi, errorMessage] = useMovie();
+  const [showTrending, setShowTrending] = useState(true);
+
+  const handleSearch = () => {
+    if (term !== '') {
+      setShowTrending(false);
+      searchApi(term);
+    } else {
+      setShowTrending(true);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <SearchBar
         term={term}
         onTermChange={setTerm}
-        onTermSubmit={() => searchApi(term)}
+        onTermSubmit={handleSearch}
       />
+
       {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-      {movies.length > 0 ? (
+
+      {showTrending ? (
+        <Trending navigation={navigation} />
+      ) : (
         <FlatList
           keyExtractor={item => item.id.toString()}
           data={movies}
@@ -34,7 +48,7 @@ export default function SearchScreen({ navigation }) {
             </TouchableOpacity>
           )}
         />
-      ) : null}
+      )}
     </View>
   );
 }

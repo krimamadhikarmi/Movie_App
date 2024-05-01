@@ -8,7 +8,7 @@ export function useMovie() {
 
   function searchApi(term) {
     fetch(
-      `https://api.themoviedb.org/3/search/movie?query=${term}&include_adult=false&language=en-US&page=1`,
+      `https://api.themoviedb.org/3/search/multi?query=${term}&include_adult=false&language=en-US&page=1`,
       {
         headers: {
           Authorization:
@@ -28,10 +28,5 @@ export function useMovie() {
       });
   }
 
-  useEffect(() => {
-    searchApi('Kungfu');
-  }, []);
-
-  
   return [movies, searchApi, errorMessage];
 }
