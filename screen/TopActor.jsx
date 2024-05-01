@@ -1,7 +1,6 @@
 import {useState, useEffect} from 'react';
 import {View, Text, FlatList, Image, TouchableOpacity,StyleSheet} from 'react-native';
-import ActorCredit from './ActorCredit';
-import ActorShow from './ActorShow';
+
 
 export default function TopPeople({navigation}) {
   const [people, setPeople] = useState();
@@ -28,7 +27,7 @@ export default function TopPeople({navigation}) {
         data={people}
         renderItem={({item}) => (
           <View style={styles.item}>
-            <TouchableOpacity onPress={() => navigation.navigate('Actor',{ id: item.id,movie:item.known_for})}>
+            <TouchableOpacity onPress={() => navigation.navigate('Act',{ id: item.id,movie:item.known_for})}>
               <Image
                 source={{
                   uri: `https://image.tmdb.org/t/p/w500${item.profile_path}`,

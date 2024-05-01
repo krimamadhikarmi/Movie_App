@@ -1,18 +1,16 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 import SearchScreen from './screen/SearchScreen';
 import MovieShow from './screen/MovieShow';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import {MovieTop} from './components/MovieTop';
 import {SeriesScreen} from './screen/SeriesScreen';
 import {SeriesShow} from './screen/SeriesShow';
 import TopPeople from './screen/TopActor';
-import ActorShow from './screen/ActorShow';
-import ActorCredit from './screen/ActorCredit';
 
+import ActorCombine from './screen/Actor';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,9 +38,15 @@ function Home() {
         options={{tabBarIcon: () => <Icon name="tv" size={20} color="gray" />}}
       />
       <Tab.Screen
-        name="Top People"
+        name="Top Stars"
         component={TopPeople}
-        options={{tabBarIcon: () => <Icon name="tv" size={20} color="gray" />}}
+        options={{
+          tabBarIcon: () => (
+            <Image
+              source={require('./starr.png')}
+              style={{width: 20, height: 20, tintColor: 'gray'}} />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
@@ -51,7 +55,9 @@ export default function App() {
   return (
     <View style={{flex: 1}}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown:false}}>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{headerShown: false}}>
           <Stack.Screen
             name="Home"
             component={Home}
@@ -64,8 +70,8 @@ export default function App() {
           <Stack.Screen name="Search" component={SearchScreen} />
           <Stack.Screen name="Show" component={MovieShow} />
           <Stack.Screen name="Series" component={SeriesShow} />
-          <Stack.Screen name="Actor" component={ActorShow} />
-          <Stack.Screen name="Credit" component={ActorCredit} />
+
+          <Stack.Screen name="Act" component={ActorCombine} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>
