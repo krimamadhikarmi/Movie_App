@@ -4,6 +4,7 @@ import {View, Text, FlatList, Image, TouchableOpacity,StyleSheet} from 'react-na
 
 export default function TopPeople({navigation}) {
   const [people, setPeople] = useState();
+ 
 
   useEffect(() => {
     fetch('https://api.themoviedb.org/3/person/popular?language=en-US&page=1', {
@@ -19,12 +20,14 @@ export default function TopPeople({navigation}) {
       });
   }, []);
 
+
+  const filterPeople = people && people.length>10? people.slice(0 , 10): people
   return (
     <View style={{backgroundColor: 'black'}}>
       <FlatList
         keyExtractor={item => item.name}
         numColumns={2}
-        data={people}
+        data={filterPeople}
         renderItem={({item}) => (
           <View style={styles.item}>
             <TouchableOpacity onPress={() => navigation.navigate('Act',{ id: item.id,movie:item.known_for})}>

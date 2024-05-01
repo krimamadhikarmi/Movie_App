@@ -54,14 +54,14 @@ export default function ActorCombine({ route, navigation }) {
       </View>
     );
   };
-
+  const filterMovie = actorCredit && actorCredit.length>10? actorCredit.slice(0 , 10): actorCredit
   return (
     <View style={{backgroundColor:"black"}}>
     <FlatList
       ListHeaderComponent={renderHeader}
       keyExtractor={item => item.id.toString()}
       numColumns={2}
-      data={actorCredit}
+      data={filterMovie}
       renderItem={({ item }) => (
         <TouchableOpacity onPress={() => navigation.navigate('Show', { movieId: item.id })}>
             <View style={styles.item}>
