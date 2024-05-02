@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {FetchMovie} from '../redux/MovieSlice';
-import usePlay from './NowPlay';
-import useComing from './UpcomingMovie';
-import FilterButton from './MovieButton';
+import usePlay from '../components/NowPlay';
+import useComing from '../components/UpcomingMovie';
+import FilterButton from '../components/Button';
 
 export function MovieTop({navigation}) {
   const [topMovies, setTopMovies] = useState([]);
@@ -109,35 +109,35 @@ export function MovieTop({navigation}) {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         style={{marginBottom: 10}}>
-        
-          <FilterButton
-            title="All Movies"
-            onPress={handleShowAllPress}
-            isActive={showAll}
-          />
-          <FilterButton
-            title="Popular"
-            onPress={handlePopularPress}
-            isActive={popular}
-          />
-          <FilterButton
-            title="Top Rated"
-            onPress={handleTopRatedPress}
-            isActive={topRated}
-          />
-          <FilterButton
-            title="Now Playing"
-            onPress={handlePlay}
-            isActive={nowPlay}
-          />
-          <FilterButton
-            title="Upcoming"
-            onPress={handleComing}
-            isActive={upcoming}
-          />
+        <FilterButton
+          title="All Movies"
+          onPress={handleShowAllPress}
+          isActive={showAll}
+        />
+        <FilterButton
+          title="Popular"
+          onPress={handlePopularPress}
+          isActive={popular}
+        />
+        <FilterButton
+          title="Top Rated"
+          onPress={handleTopRatedPress}
+          isActive={topRated}
+        />
+        <FilterButton
+          title="Now Playing"
+          onPress={handlePlay}
+          isActive={nowPlay}
+        />
+        <FilterButton
+          title="Upcoming"
+          onPress={handleComing}
+          isActive={upcoming}
+        />
       </ScrollView>
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         keyExtractor={item => item.id.toString()}
         data={filterMovies()}
         renderItem={({item}) => (

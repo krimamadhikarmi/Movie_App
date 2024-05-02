@@ -39,6 +39,7 @@ export default function TopPeople({navigation}) {
   return (
     <View style={{backgroundColor: 'black'}}>
       <FlatList
+       showsVerticalScrollIndicator={false}
         keyExtractor={item => item.name}
         numColumns={2}
         data={filterPeople}

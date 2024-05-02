@@ -5,7 +5,7 @@ import {Image, View} from 'react-native';
 import SearchScreen from './screen/SearchScreen';
 import MovieShow from './screen/MovieShow';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {MovieTop} from './components/MovieTop';
+import {MovieTop} from './screen/MovieTop';
 import {SeriesScreen} from './screen/SeriesScreen';
 import {SeriesShow} from './screen/SeriesShow';
 import TopPeople from './screen/TopActorScreen';
@@ -13,7 +13,6 @@ import TopPeople from './screen/TopActorScreen';
 import ActorCombine from './screen/Actor';
 import {Provider} from 'react-redux';
 import MyStore from './redux/MyStore';
-
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -61,7 +60,7 @@ function Home() {
         }}
       />
       <Tab.Screen
-        name="TV"
+        name="Series"
         component={SeriesScreen}
         options={{
           headerStyle: {

@@ -13,7 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchSeries} from '../redux/SeriesSlice';
 import useComingSeries from '../components/UpcomingSeries';
 import usePlaySeries from '../components/PlayingSeries';
-import FilterButton from '../components/MovieButton';
+import FilterButton from '../components/Button';
 
 export function SeriesScreen({navigation}) {
   const [topSeries, setTopSeries] = useState([]);
@@ -132,6 +132,7 @@ export function SeriesScreen({navigation}) {
         />
       </ScrollView>
       <FlatList
+        showsVerticalScrollIndicator={false}
         keyExtractor={item => item.id.toString()}
         data={filteredSeries()}
         renderItem={({item}) => (

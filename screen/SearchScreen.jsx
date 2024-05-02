@@ -43,6 +43,7 @@ export default function SearchScreen({navigation}) {
         <Trending navigation={navigation} />
       ) : (
         <FlatList
+          showsVerticalScrollIndicator={false}
           keyExtractor={item => item.id.toString()}
           data={movies}
           renderItem={({item}) => (

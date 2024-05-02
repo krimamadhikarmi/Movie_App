@@ -31,12 +31,12 @@ export default function MovieShow({route, navigation}) {
       });
 
     // Fetch reviews
-    fetch(`http://172.27.16.1:3000/api/v1/movies/${movieId}/reviews`)
-      .then(response => response.json())
-      .then(data => {
-        console.log('Reviews data:', data);
-        setReviewsData(data.reviews);
-      });
+    // fetch(`http://172.27.16.1:3000/api/v1/movies/${movieId}/reviews`)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     console.log('Reviews data:', data);
+    //     setReviewsData(data.reviews);
+    //   });
   }, [movieId]);
 
   // const handleReviewSubmit = () => {
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   },
   itemText:{
     fontSize: 15, 
+    flexDirection:"column",
     textAlign: 'center', 
     marginBottom: 5
   }

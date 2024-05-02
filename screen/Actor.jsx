@@ -50,15 +50,18 @@ export default function ActorCombine({ route, navigation }) {
           style={styles.headerImage}
         />
         <Text style={styles.headerBio}>{actor.biography}</Text>
+
+        <Text style={{fontSize:25,fontWeight:"bold"}}>Works</Text>
       </View>
     );
   };
 
-  const filterMovie = actorCredit && actorCredit.length > 10 ? actorCredit.slice(0, 10) : actorCredit;
+  const filterMovie = actorCredit && actorCredit.length > 12 ? actorCredit.slice(0, 12) : actorCredit;
 
   return (
     <View style={{ backgroundColor: "black", flex: 1 }}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={renderHeader}
         keyExtractor={item => item.id.toString()}
         numColumns={2}
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: "royalblue",
+    color: "crimson",
   },
   headerImage: {
     width: 150,
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
     marginBottom: 12,
-    color: 'white',
+    color: 'crimson',
     borderRadius: 5,
   },
 });
