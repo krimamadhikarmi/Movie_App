@@ -6,11 +6,16 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
+  Dimensions,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchActor} from '../redux/ActorSlice';
 
 export default function TopPeople({navigation}) {
   const [people, setPeople] = useState();
+
+  const dispatch = useDispatch();
+  const actorList = useSelector(state => state.actorshow);
 
   useEffect(() => {
     fetch('https://api.themoviedb.org/3/person/popular?language=en-US&page=1', {
@@ -25,6 +30,10 @@ export default function TopPeople({navigation}) {
       });
   }, []);
 
+  const addActor = actor => {
+    dispatch(fetchActor(actor));
+  };
+
   const filterPeople =
     people && people.length > 10 ? people.slice(0, 10) : people;
   return (
@@ -36,9 +45,13 @@ export default function TopPeople({navigation}) {
         renderItem={({item}) => (
           <View style={styles.item}>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Act', {id: item.id, movie: item.known_for})
-              }>
+              onPress={() => {
+                addActor(item);
+                navigation.navigate('Act', {
+                  id: item.id,
+                  movie: item.known_for,
+                });
+              }}>
               <Image
                 source={{
                   uri: `https://image.tmdb.org/t/p/w500${item.profile_path}`,
@@ -65,7 +78,7 @@ const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   item: {
     flex: 1,
-    maxWidth: windowWidth/2,
+    maxWidth: windowWidth / 2,
     alignItems: 'center',
     margin: 10,
   },
