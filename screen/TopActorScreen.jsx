@@ -1,10 +1,15 @@
 import {useState, useEffect} from 'react';
-import {View, Text, FlatList, Image, TouchableOpacity,StyleSheet} from 'react-native';
-
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 
 export default function TopPeople({navigation}) {
   const [people, setPeople] = useState();
- 
 
   useEffect(() => {
     fetch('https://api.themoviedb.org/3/person/popular?language=en-US&page=1', {
@@ -15,13 +20,12 @@ export default function TopPeople({navigation}) {
     })
       .then(response => response.json())
       .then(data => {
-        
         setPeople(data.results);
       });
   }, []);
 
-
-  const filterPeople = people && people.length>10? people.slice(0 , 10): people
+  const filterPeople =
+    people && people.length > 10 ? people.slice(0, 10) : people;
   return (
     <View style={{backgroundColor: 'black'}}>
       <FlatList
@@ -30,19 +34,26 @@ export default function TopPeople({navigation}) {
         data={filterPeople}
         renderItem={({item}) => (
           <View style={styles.item}>
-            <TouchableOpacity onPress={() => navigation.navigate('Act',{ id: item.id,movie:item.known_for})}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('Act', {id: item.id, movie: item.known_for})
+              }>
               <Image
                 source={{
                   uri: `https://image.tmdb.org/t/p/w500${item.profile_path}`,
                 }}
                 style={{width: 100, height: 100, borderRadius: 60, margin: 8}}
               />
-              <Text style={{color: 'green', margin: 8, fontWeight: 'bold',textAlign:"center"}}>
+              <Text
+                style={{
+                  color: 'gray',
+                  margin: 8,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                }}>
                 {item.name}
               </Text>
-             
             </TouchableOpacity>
-            
           </View>
         )}
       />
@@ -51,10 +62,10 @@ export default function TopPeople({navigation}) {
 }
 
 const styles = StyleSheet.create({
-    item: {
-        flex: 1,
-        maxWidth: "50%", 
-        alignItems: "center",
-        margin:10,
-    },
-})
+  item: {
+    flex: 1,
+    maxWidth: '50%',
+    alignItems: 'center',
+    margin: 10,
+  },
+});

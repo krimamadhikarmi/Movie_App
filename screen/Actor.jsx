@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 
 export default function ActorCombine({ route, navigation }) {
   const { id } = route.params;
@@ -39,7 +39,6 @@ export default function ActorCombine({ route, navigation }) {
       .catch(error => console.error('Error fetching actor credits:', error));
   };
 
-
   const renderHeader = () => {
     return (
       <View style={styles.headerContainer}>
@@ -54,31 +53,35 @@ export default function ActorCombine({ route, navigation }) {
       </View>
     );
   };
-  const filterMovie = actorCredit && actorCredit.length>10? actorCredit.slice(0 , 10): actorCredit
+
+  const filterMovie = actorCredit && actorCredit.length > 10 ? actorCredit.slice(0, 10) : actorCredit;
+
   return (
-    <View style={{backgroundColor:"black"}}>
-    <FlatList
-      ListHeaderComponent={renderHeader}
-      keyExtractor={item => item.id.toString()}
-      numColumns={2}
-      data={filterMovie}
-      renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate('Show', { movieId: item.id })}>
+    <View style={{ backgroundColor: "black", flex: 1 }}>
+      <FlatList
+        ListHeaderComponent={renderHeader}
+        keyExtractor={item => item.id.toString()}
+        numColumns={2}
+        data={filterMovie}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => navigation.navigate('Show', { movieId: item.id })}>
             <View style={styles.item}>
-          <Image
-            source={{
-              uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
-            }}
-            style={{ width: 150, height: 200,borderRadius:20}}
-          />
-          <Text style={styles.itemText}>{item.title}</Text>
-          </View>
-        </TouchableOpacity>
-      )}
-    />
+              <Image
+                source={{
+                  uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+                }}
+                style={styles.itemImage}
+              />
+              <Text style={styles.itemText}>{item.title}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 }
+
+const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -89,7 +92,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 15,
-    color:"green"
+    color: "green",
   },
   headerImage: {
     width: 150,
@@ -101,18 +104,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 35,
-
+  },
+  item: {
+    width: windowWidth / 2,
+    alignItems: 'center',
+    padding:10
+  },
+  itemImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 10,
   },
   itemText: {
     textAlign: 'center',
     fontSize: 15,
-    marginBottom:12,
+    marginBottom: 12,
+    color: 'white',
+    borderRadius: 5,
   },
-  item: {
-    flex: 1,
-    maxWidth: "40%", 
-    alignItems: "center",
-    marginHorizontal:20,
-    marginLeft:39,
-  }
 });

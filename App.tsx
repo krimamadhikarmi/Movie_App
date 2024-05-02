@@ -11,42 +11,87 @@ import {SeriesShow} from './screen/SeriesShow';
 import TopPeople from './screen/TopActorScreen';
 
 import ActorCombine from './screen/Actor';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import MyStore from './redux/MyStore';
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function Home() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: 'red',
+        tabBarStyle: {backgroundColor: 'black'},
+      }}>
       <Tab.Screen
         name="Movies"
         component={MovieTop}
         options={{
-          tabBarIcon: () => <Icon name="file-movie-o" size={20} color="gray" />,
+          headerStyle: {
+            backgroundColor: 'black',
+          },
+          headerTitleAlign: 'center',
+          headerTintColor: 'yellow',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          // tabBarIcon: ({red}) => <Icon name="file-movie-o" size={20}  color={red}  />,
+          tabBarIcon: ({color}) => (
+            <Icon name="file-movie-o" size={20} color={color} />
+          ),
         }}
       />
       <Tab.Screen
         name="Search"
         component={SearchScreen}
         options={{
-          tabBarIcon: () => <Icon name="search" size={20} color="gray" />,
+          headerStyle: {
+            backgroundColor: 'black',
+          },
+          headerTitleAlign: 'center',
+          headerTintColor: 'yellow',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          tabBarIcon: ({color}) => (
+            <Icon name="search" size={20} color={color} />
+          ),
         }}
       />
       <Tab.Screen
         name="TV"
         component={SeriesScreen}
-        options={{tabBarIcon: () => <Icon name="tv" size={20} color="gray" />}}
+        options={{
+          headerStyle: {
+            backgroundColor: 'black',
+          },
+          headerTitleAlign: 'center',
+          headerTintColor: 'yellow',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          tabBarIcon: ({color}) => <Icon name="tv" size={20} color={color} />,
+        }}
       />
       <Tab.Screen
         name="Top Stars"
         component={TopPeople}
         options={{
-          tabBarIcon: () => (
+          headerStyle: {
+            backgroundColor: 'black',
+          },
+          headerTitleAlign: 'center',
+          headerTintColor: 'yellow',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          tabBarIcon: ({color}) => (
             <Image
               source={require('./starr.png')}
-              style={{width: 20, height: 20, tintColor: 'gray'}} />
+              style={{width: 20, height: 20, tintColor: color}}
+            />
           ),
         }}
       />
@@ -57,26 +102,63 @@ export default function App() {
   return (
     <View style={{flex: 1}}>
       <Provider store={MyStore}>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Home"
-          >
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{
-              title: 'Movie App',
-              headerTitleAlign: 'center',
-              headerTitleStyle: {fontSize: 25, fontWeight: 'bold'},
-            }}
-          />
-          <Stack.Screen name="Search" component={SearchScreen} />
-          <Stack.Screen name="Show" component={MovieShow} />
-          <Stack.Screen name="Series" component={SeriesShow} />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{
+                title: 'Movie App',
+                headerTitleAlign: 'center',
+                headerTintColor: 'red',
+                headerStyle: {
+                  backgroundColor: 'black',
+                },
+                headerTitleStyle: {fontSize: 25, fontWeight: 'bold'},
+              }}
+            />
+            <Stack.Screen name="Search" component={SearchScreen} />
+            <Stack.Screen
+              name="Show"
+              component={MovieShow}
+              options={{
+                title: 'Show',
 
-          <Stack.Screen name="Act" component={ActorCombine} />
-        </Stack.Navigator>
-      </NavigationContainer>
+                headerTintColor: 'gray',
+                headerStyle: {
+                  backgroundColor: 'black',
+                },
+                headerTitleStyle: {fontSize: 18, fontWeight: 'bold'},
+              }}
+            />
+            <Stack.Screen
+              name="Series"
+              component={SeriesShow}
+              options={{
+                title: 'Series',
+                headerTintColor: 'gray',
+                headerStyle: {
+                  backgroundColor: 'black',
+                },
+                headerTitleStyle: {fontSize: 18, fontWeight: 'bold'},
+              }}
+            />
+
+            <Stack.Screen
+              name="Act"
+              component={ActorCombine}
+              options={{
+                title: 'Actor',
+
+                headerTintColor: 'gray',
+                headerStyle: {
+                  backgroundColor: 'black',
+                },
+                headerTitleStyle: {fontSize: 18, fontWeight: 'bold'},
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
       </Provider>
     </View>
   );

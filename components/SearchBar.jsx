@@ -9,7 +9,7 @@ export function SearchBar({ term, onTermChange, onTermSubmit }) {
         <Icon name="search" style={styles.icon} />
         <TextInput
           style={styles.input}
-          placeholder="Search Movie"
+          placeholder="Search Tv,Movies"
           value={term}
           onChangeText={newTerm => onTermChange(newTerm)}
           onEndEditing={onTermSubmit}

@@ -1,15 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { FlatList, Image, Text, TouchableOpacity, View, StyleSheet,Button} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchSeries } from '../redux/SeriesSlice';
+import React, {useState, useEffect} from 'react';
+import {
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Button,
+  ScrollView,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchSeries} from '../redux/SeriesSlice';
+import useComingSeries from '../components/UpcomingSeries';
+import usePlaySeries from '../components/PlayingSeries';
 
-export function SeriesScreen({ navigation }) {
+export function SeriesScreen({navigation}) {
   const [topSeries, setTopSeries] = useState([]);
   const [popular, setPopular] = useState(false);
   const [topRated, setTopRated] = useState(false);
-  const [showAll, setShowAll] = useState(true); 
+  const [showAll, setShowAll] = useState(true);
+  const [coming, setComing] = useComingSeries();
+  const [upcoming, setUpcoming] = useState(false);
+  const [play,setPlay]=usePlaySeries();
+  const [nowAir,setnowAir]=useState(false);
   const dispatch = useDispatch();
-  const seriesList = useSelector(state=>state.seriesshow)
+  const seriesList = useSelector(state => state.seriesshow);
 
   useEffect(() => {
     fetch('https://api.themoviedb.org/3/trending/tv/day?language=en-US', {
@@ -24,87 +39,118 @@ export function SeriesScreen({ navigation }) {
       });
   }, []);
 
-
-  const filteredSeries =()=>{
-    if(showAll){
-      return topSeries
-    }
-    else if(popular){
-      return topSeries.filter(topSeries=>topSeries.popularity > 900.00)
-    }
-    else if (topRated){
-      return topSeries.filter(topSeries=>topSeries.vote_average > 7.00)
-    }
-    else{
+  const filteredSeries = () => {
+    if (showAll) {
+      return topSeries;
+    } else if (popular) {
+      return topSeries.filter(topSeries => topSeries.popularity > 900.0);
+    } else if (topRated) {
+      return topSeries.filter(topSeries => topSeries.vote_average > 7.0);
+    } else if (upcoming) {
+      return coming;
+    } else if (nowAir) {
+      return play;
+    } else {
       return topSeries;
     }
-  }
+  };
 
   const handlePopularSeries = () => {
     setPopular(true);
     setTopRated(false);
     setShowAll(false);
+    setUpcoming(false);
+    setnowAir(false);
   };
 
   const handleTopRatedSeries = () => {
     setTopRated(true);
     setPopular(false);
     setShowAll(false);
+    setUpcoming(false);
+    setnowAir(false);
   };
 
   const handleShowAllSeries = () => {
     setShowAll(true);
     setPopular(false);
     setTopRated(false);
+    setUpcoming(false);
+    setnowAir(false);
   };
 
+  const handleUpcoming = () => {
+    setShowAll(false);
+    setPopular(false);
+    setTopRated(false);
+    setUpcoming(true);
+    setnowAir(false);
+  };
 
+  const handleonAir = () => {
+    setShowAll(false);
+    setPopular(false);
+    setTopRated(false);
+    setUpcoming(false);
+    setnowAir(true);
+  };
 
   const addSeries = series => {
     dispatch(fetchSeries(series));
   };
   return (
     <View style={styles.container}>
-        <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          marginBottom: 10,
-          marginTop:20
-        }}>
-        <View style={{ borderRadius: 50, overflow: 'hidden' }}>
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{margin:15}}>
+        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
           <Button
             title="All"
-            color={showAll ? 'purple' : 'gray'} 
+            color={showAll ? 'purple' : 'gray'}
             onPress={handleShowAllSeries}
-            
           />
         </View>
-        <View style={{ borderRadius: 50, overflow: 'hidden' }}>
+        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
           <Button
             title="Popular"
-            color={popular? 'blue':'gray'}
+            color={popular ? 'blue' : 'gray'}
             onPress={handlePopularSeries}
-            
           />
         </View>
-        <View style={{ borderRadius: 50, overflow: 'hidden' }}>
-          <Button title="Top Rated" 
-           color={topRated? 'red':'gray'}
-           onPress={handleTopRatedSeries}
-           />
+        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
+          <Button
+            title="Top Rated"
+            color={topRated ? 'red' : 'gray'}
+            onPress={handleTopRatedSeries}
+          />
         </View>
-      </View>
+        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
+          <Button
+            title="Airing Soon"
+            color={upcoming ? 'red' : 'gray'}
+            onPress={handleUpcoming}
+          />
+        </View>
+        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
+          <Button
+            title="On Air"
+            color={nowAir ? 'red' : 'gray'}
+            onPress={handleonAir}
+          />
+        </View>
+      </ScrollView>
       <FlatList
         keyExtractor={item => item.id.toString()}
         data={filteredSeries()}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => {
-            addSeries(item)
-            navigation.navigate('Series', { seriesId: item.id })}}>
+        renderItem={({item}) => (
+          <TouchableOpacity
+            onPress={() => {
+              addSeries(item);
+              navigation.navigate('Series', {seriesId: item.id});
+            }}>
             <View style={styles.seriesItemContainer}>
               <Image
-                source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
+                source={{
+                  uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+                }}
                 style={styles.seriesImage}
               />
               <Text style={styles.seriesTitle}>{item.original_name}</Text>
@@ -120,7 +166,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-    
   },
   seriesItemContainer: {
     alignItems: 'center',
@@ -128,7 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 10,
-    backgroundColor:"black",
+    backgroundColor: 'black',
   },
   seriesImage: {
     width: 300,
@@ -139,7 +184,7 @@ const styles = StyleSheet.create({
   seriesTitle: {
     fontWeight: 'bold',
     alignSelf: 'center',
-    color:"red",
-    fontSize:20
+    color: 'red',
+    fontSize: 20,
   },
 });

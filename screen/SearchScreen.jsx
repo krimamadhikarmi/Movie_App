@@ -3,7 +3,7 @@ import {FlatList, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {SearchBar} from '../components/SearchBar';
 import {useMovie} from '../hooks/useMovie';
 import MovieList from '../components/MovieList';
-import {Trending} from '../components/Trending';
+import {Trending} from '../components/TrendingMovie';
 import {FetchMovie} from '../redux/MovieSlice';
 import {useDispatch, useSelector} from 'react-redux';
 

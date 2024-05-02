@@ -11,7 +11,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {FetchMovie} from '../redux/MovieSlice';
 import usePlay from './NowPlay';
-import useComing from './Upcoming';
+import useComing from './UpcomingMovie';
 
 export function MovieTop({navigation}) {
   const [topMovies, setTopMovies] = useState([]);
