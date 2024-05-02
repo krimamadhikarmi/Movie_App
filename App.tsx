@@ -33,7 +33,7 @@ function Home() {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'center',
-          headerTintColor: 'yellow',
+          headerTintColor: 'cornflowerblue',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
@@ -51,7 +51,7 @@ function Home() {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'center',
-          headerTintColor: 'yellow',
+          headerTintColor: 'cornflowerblue',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
@@ -68,7 +68,7 @@ function Home() {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'center',
-          headerTintColor: 'yellow',
+          headerTintColor: 'cornflowerblue',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
@@ -83,7 +83,7 @@ function Home() {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'center',
-          headerTintColor: 'yellow',
+          headerTintColor: 'cornflowerblue',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
@@ -122,13 +122,13 @@ export default function App() {
               name="Show"
               component={MovieShow}
               options={{
-                title: 'Show',
+                title: 'Movie',
 
                 headerTintColor: 'gray',
                 headerStyle: {
                   backgroundColor: 'black',
                 },
-                headerTitleStyle: {fontSize: 18, fontWeight: 'bold'},
+                headerTitleStyle: {fontSize: 20, fontWeight: 'bold'},
               }}
             />
             <Stack.Screen
@@ -140,7 +140,7 @@ export default function App() {
                 headerStyle: {
                   backgroundColor: 'black',
                 },
-                headerTitleStyle: {fontSize: 18, fontWeight: 'bold'},
+                headerTitleStyle: {fontSize: 20, fontWeight: 'bold'},
               }}
             />
 
@@ -154,7 +154,7 @@ export default function App() {
                 headerStyle: {
                   backgroundColor: 'black',
                 },
-                headerTitleStyle: {fontSize: 18, fontWeight: 'bold'},
+                headerTitleStyle: {fontSize: 20, fontWeight: 'bold'},
               }}
             />
           </Stack.Navigator>

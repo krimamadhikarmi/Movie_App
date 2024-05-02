@@ -13,6 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchSeries} from '../redux/SeriesSlice';
 import useComingSeries from '../components/UpcomingSeries';
 import usePlaySeries from '../components/PlayingSeries';
+import FilterButton from '../components/MovieButton';
 
 export function SeriesScreen({navigation}) {
   const [topSeries, setTopSeries] = useState([]);
@@ -21,8 +22,8 @@ export function SeriesScreen({navigation}) {
   const [showAll, setShowAll] = useState(true);
   const [coming, setComing] = useComingSeries();
   const [upcoming, setUpcoming] = useState(false);
-  const [play,setPlay]=usePlaySeries();
-  const [nowAir,setnowAir]=useState(false);
+  const [play, setPlay] = usePlaySeries();
+  const [nowAir, setnowAir] = useState(false);
   const dispatch = useDispatch();
   const seriesList = useSelector(state => state.seriesshow);
 
@@ -100,42 +101,35 @@ export function SeriesScreen({navigation}) {
   };
   return (
     <View style={styles.container}>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{margin:15}}>
-        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
-          <Button
-            title="All"
-            color={showAll ? 'purple' : 'gray'}
-            onPress={handleShowAllSeries}
-          />
-        </View>
-        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
-          <Button
-            title="Popular"
-            color={popular ? 'blue' : 'gray'}
-            onPress={handlePopularSeries}
-          />
-        </View>
-        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
-          <Button
-            title="Top Rated"
-            color={topRated ? 'red' : 'gray'}
-            onPress={handleTopRatedSeries}
-          />
-        </View>
-        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
-          <Button
-            title="Airing Soon"
-            color={upcoming ? 'red' : 'gray'}
-            onPress={handleUpcoming}
-          />
-        </View>
-        <View style={{borderRadius: 50, overflow: 'hidden',marginRight:10}}>
-          <Button
-            title="On Air"
-            color={nowAir ? 'red' : 'gray'}
-            onPress={handleonAir}
-          />
-        </View>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        style={{margin: 15}}>
+        <FilterButton
+          title="All Series"
+          onPress={handleShowAllSeries}
+          isActive={showAll}
+        />
+        <FilterButton
+          title="Popular"
+          onPress={handlePopularSeries}
+          isActive={popular}
+        />
+        <FilterButton
+          title="Top Rated"
+          onPress={handleTopRatedSeries}
+          isActive={topRated}
+        />
+        <FilterButton
+          title="Now Playing"
+          onPress={handleonAir}
+          isActive={nowAir}
+        />
+        <FilterButton
+          title="Upcoming"
+          onPress={handleUpcoming}
+          isActive={upcoming}
+        />
       </ScrollView>
       <FlatList
         keyExtractor={item => item.id.toString()}
@@ -183,8 +177,8 @@ const styles = StyleSheet.create({
   },
   seriesTitle: {
     fontWeight: 'bold',
-    alignSelf: 'center',
+    textAlign: 'center',
     color: 'red',
-    fontSize: 20,
+    fontSize: 16,
   },
 });

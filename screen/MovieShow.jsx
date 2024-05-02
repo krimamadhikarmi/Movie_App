@@ -1,8 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TextInput, Button, FlatList } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TextInput,
+  Button,
+  FlatList,
+  StyleSheet,
+} from 'react-native';
 
-export default function MovieShow({ route, navigation }) {
-  const { movieId } = route.params;
+export default function MovieShow({route, navigation}) {
+  const {movieId} = route.params;
 
   const [movie, setMovies] = useState([]);
   const [review, setReview] = useState('');
@@ -25,54 +34,49 @@ export default function MovieShow({ route, navigation }) {
     fetch(`http://172.27.16.1:3000/api/v1/movies/${movieId}/reviews`)
       .then(response => response.json())
       .then(data => {
-        console.log("Reviews data:", data);
+        console.log('Reviews data:', data);
         setReviewsData(data.reviews);
       });
   }, [movieId]);
 
   // const handleReviewSubmit = () => {
-  
+
   //   console.log('Review Submitted:', review);
   //   setReview('');
   // };
 
   return (
-    <ScrollView style={{ backgroundColor: 'black', flex: 1 }}>
+    <ScrollView style={{backgroundColor: 'black'}}>
       {movie && (
         <View>
-          <View style={{ marginVertical: 20, alignItems: 'center' }}>
-            <Text
-              style={{
-                fontSize: 30,
-                margin: 10,
-                fontWeight: 'bold',
-                color: 'white',
-                textAlign:"center"
-              }}>
-              {movie.original_title}
-            </Text>
+          <View>
+            <Text style={styles.title}>{movie.original_title}</Text>
             <Image
               source={{
                 uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
               }}
-              style={{ width: 200, height: 300, borderRadius: 20 }}
+              style={styles.itemImage}
             />
           </View>
-          <Text style={{ fontSize: 15 ,textAlign:"center"}}>
-          <Text style={{fontWeight:"bold"}}>Original Language: </Text> {movie.original_language}
+          <Text style={styles.itemText}>
+            <Text style={{fontWeight: 'bold'}}>Original Language: </Text>{' '}
+            {movie.original_language}
           </Text>
-          <Text style={{ fontSize: 15,textAlign:"center"}}><Text style={{fontWeight:"bold"}}>Popularity: </Text>{movie.popularity}</Text>
-          <Text style={{ fontSize: 15 ,textAlign:"center"}}><Text style={{fontWeight:"bold"}}>Vote Average: </Text>{movie.vote_average}</Text>
-          <Text style={{ fontSize: 15 ,textAlign:"center"}}><Text style={{fontWeight:"bold"}}>Release Date: </Text>{movie.release_date}</Text>
-        
+          <Text style={styles.itemText}>
+            <Text style={{fontWeight: 'bold'}}>Popularity: </Text>
+            {movie.popularity}
+          </Text>
+          <Text style={styles.itemText}>
+            <Text style={{fontWeight: 'bold'}}>Vote Average: </Text>
+            {movie.vote_average}
+          </Text>
+          <Text style={styles.itemText}>
+            <Text style={{fontWeight: 'bold'}}>Release Date: </Text>
+            {movie.release_date}
+          </Text>
+
           <Text
-            style={{
-              fontSize: 16,
-              marginHorizontal: 10,
-              textAlign: 'center',
-              marginTop: 8,
-            }}>
-            {' '}
+            style={styles.itemText}>
             {movie.overview}
           </Text>
         </View>
@@ -106,16 +110,13 @@ export default function MovieShow({ route, navigation }) {
       </View> */}
 
       {/* Display reviews */}
-      <View style={{ marginTop: 20, marginHorizontal: 10 }}>
-        <Text style={{ fontSize: 20, color: 'white', marginBottom: 10 }}>
-          Reviews:
-        </Text>
-        {/* {reviewsData.map((review, index) => (
+
+      {/* {reviewsData.map((review, index) => (
           <Text key={index} style={{ fontSize: 16, color: 'white' }}>
             {review.description}
           </Text>
         ))} */}
-{/* 
+      {/* 
         <FlatList 
         keyExtractor={item=>item.id}
         data={reviewsData}
@@ -123,7 +124,28 @@ export default function MovieShow({ route, navigation }) {
           <Text>{item.description}</Text>
         )}
         /> */}
-      </View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 25,
+    margin: 10,
+    fontWeight: 'bold',
+    color: 'crimson',
+    textAlign: 'center',
+  },
+  itemImage: {
+    width: 200,
+    height: 300,
+    borderRadius: 20,
+    alignSelf: 'center',
+    marginBottom: 15,
+  },
+  itemText:{
+    fontSize: 15, 
+    textAlign: 'center', 
+    marginBottom: 5
+  }
+});

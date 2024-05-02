@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Dimensions
 } from 'react-native';
 
 export default function TopPeople({navigation}) {
@@ -60,11 +61,11 @@ export default function TopPeople({navigation}) {
     </View>
   );
 }
-
+const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   item: {
     flex: 1,
-    maxWidth: '50%',
+    maxWidth: windowWidth/2,
     alignItems: 'center',
     margin: 10,
   },

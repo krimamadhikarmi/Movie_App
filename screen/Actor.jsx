@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: "green",
+    color: "royalblue",
   },
   headerImage: {
     width: 150,
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   headerBio: {
-    fontSize: 16,
+    fontSize: 15,
     textAlign: 'center',
     marginBottom: 35,
   },

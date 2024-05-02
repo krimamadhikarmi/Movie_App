@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {FetchMovie} from '../redux/MovieSlice';
 import usePlay from './NowPlay';
 import useComing from './UpcomingMovie';
+import FilterButton from './MovieButton';
 
 export function MovieTop({navigation}) {
   const [topMovies, setTopMovies] = useState([]);
@@ -20,8 +21,8 @@ export function MovieTop({navigation}) {
   const [showAll, setShowAll] = useState(true);
   const [play, setPlay] = usePlay();
   const [nowPlay, setNowPlay] = useState(false);
-  const [coming,setComing]=useComing();
-  const[upcoming,setUpComing]=useState(false);
+  const [coming, setComing] = useComing();
+  const [upcoming, setUpComing] = useState(false);
 
   const dispatch = useDispatch();
   const movieList = useSelector(state => state.movieshow);
@@ -72,8 +73,6 @@ export function MovieTop({navigation}) {
     setShowAll(false);
     setNowPlay(false);
     setUpComing(false);
-
-  
   };
 
   const handleShowAllPress = () => {
@@ -92,14 +91,13 @@ export function MovieTop({navigation}) {
     setUpComing(false);
   };
 
-  const handleComing =()=>{
+  const handleComing = () => {
     setNowPlay(false);
     setShowAll(false);
     setPopular(false);
     setTopRated(false);
     setUpComing(true);
-
-  }
+  };
 
   const addMovie = movie => {
     dispatch(FetchMovie(movie));
@@ -111,41 +109,32 @@ export function MovieTop({navigation}) {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         style={{marginBottom: 10}}>
-        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
-          <Button
+        
+          <FilterButton
             title="All Movies"
             onPress={handleShowAllPress}
-            color={showAll ? 'purple' : 'gray'}
+            isActive={showAll}
           />
-        </View>
-        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
-          <Button
+          <FilterButton
             title="Popular"
-            color={popular ? 'blue' : 'gray'}
             onPress={handlePopularPress}
+            isActive={popular}
           />
-        </View>
-        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
-          <Button
+          <FilterButton
             title="Top Rated"
-            color={topRated ? 'red' : 'gray'}
             onPress={handleTopRatedPress}
+            isActive={topRated}
           />
-        </View>
-        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
-          <Button
+          <FilterButton
             title="Now Playing"
-            color={nowPlay ? 'plum' : 'gray'}
             onPress={handlePlay}
+            isActive={nowPlay}
           />
-        </View>
-        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
-          <Button
+          <FilterButton
             title="Upcoming"
-            color={upcoming ? 'plum' : 'gray'}
             onPress={handleComing}
+            isActive={upcoming}
           />
-        </View>
       </ScrollView>
 
       <FlatList
