@@ -11,6 +11,8 @@ import {SeriesShow} from './screen/SeriesShow';
 import TopPeople from './screen/TopActorScreen';
 
 import ActorCombine from './screen/Actor';
+import { Provider } from 'react-redux';
+import MyStore from './redux/MyStore';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -54,6 +56,7 @@ function Home() {
 export default function App() {
   return (
     <View style={{flex: 1}}>
+      <Provider store={MyStore}>
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Home"
@@ -74,6 +77,7 @@ export default function App() {
           <Stack.Screen name="Act" component={ActorCombine} />
         </Stack.Navigator>
       </NavigationContainer>
+      </Provider>
     </View>
   );
 }

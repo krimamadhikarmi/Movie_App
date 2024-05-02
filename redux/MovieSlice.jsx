@@ -9,8 +9,12 @@ const MovieSlice = createSlice({
         FetchMovie(state,action){
             state.push(action.payload);
         },
+        addtrendMovie(state,action){
+            state.push(action.payload)
+        }
     },
 });
 
 
-export const {FetchMovie} = MovieSlice.actions;
+export const {FetchMovie,addtrendMovie} = MovieSlice.actions;
+export default MovieSlice.reducer;

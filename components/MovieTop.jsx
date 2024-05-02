@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, Text, View, TouchableOpacity, Button } from 'react-native';
+import { useDispatch,useSelector} from 'react-redux';
+import { FetchMovie } from '../redux/MovieSlice';
 
 export function MovieTop({ navigation }) {
   const [topMovies, setTopMovies] = useState([]);
   const [popular, setPopular] = useState(false);
   const [topRated, setTopRated] = useState(false);
   const [showAll, setShowAll] = useState(true); 
+  const dispatch=useDispatch();
+  const movieList = useSelector(state => state.movieshow);
 
   useEffect(() => {
     fetch(
@@ -52,6 +56,13 @@ export function MovieTop({ navigation }) {
     setTopRated(false);
   };
 
+
+  const addMovie = movie => {
+    dispatch(FetchMovie(movie));
+  };
+
+
+
   return (
     <View style={{ flex: 1, backgroundColor: 'black', padding: 10 }}>
       <View
@@ -86,7 +97,9 @@ export function MovieTop({ navigation }) {
         data={filterMovies()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('Show', { movieId: item.id })}
+            onPress={() => 
+              { addMovie(item);
+                navigation.navigate('Show', { movieId: item.id })}}
           >
             <View
               style={{

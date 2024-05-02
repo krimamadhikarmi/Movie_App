@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, Image, Text, TouchableOpacity, View, StyleSheet,Button} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSeries } from '../redux/SeriesSlice';
 
 export function SeriesScreen({ navigation }) {
   const [topSeries, setTopSeries] = useState([]);
   const [popular, setPopular] = useState(false);
   const [topRated, setTopRated] = useState(false);
   const [showAll, setShowAll] = useState(true); 
+  const dispatch = useDispatch();
+  const seriesList = useSelector(state=>state.seriesshow)
 
   useEffect(() => {
     fetch('https://api.themoviedb.org/3/trending/tv/day?language=en-US', {
@@ -54,6 +58,11 @@ export function SeriesScreen({ navigation }) {
     setTopRated(false);
   };
 
+
+
+  const addSeries = series => {
+    dispatch(fetchSeries(series));
+  };
   return (
     <View style={styles.container}>
         <View
@@ -90,7 +99,9 @@ export function SeriesScreen({ navigation }) {
         keyExtractor={item => item.id.toString()}
         data={filteredSeries()}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('Series', { seriesId: item.id })}>
+          <TouchableOpacity onPress={() => {
+            addSeries(item)
+            navigation.navigate('Series', { seriesId: item.id })}}>
             <View style={styles.seriesItemContainer}>
               <Image
                 source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}

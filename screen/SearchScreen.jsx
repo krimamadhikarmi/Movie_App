@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
-import { FlatList, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
-import { SearchBar } from '../components/SearchBar';
-import { useMovie } from '../hooks/useMovie';
+import React, {useState} from 'react';
+import {FlatList, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {SearchBar} from '../components/SearchBar';
+import {useMovie} from '../hooks/useMovie';
 import MovieList from '../components/MovieList';
-import { Trending } from '../components/Trending';
+import {Trending} from '../components/Trending';
+import {FetchMovie} from '../redux/MovieSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
-export default function SearchScreen({ navigation }) {
+export default function SearchScreen({navigation}) {
   const [term, setTerm] = useState('');
   const [movies, searchApi, errorMessage] = useMovie();
   const [showTrending, setShowTrending] = useState(true);
+  const dispatch = useDispatch();
+  const movieList = useSelector(state => state.movieshow);
 
   const handleSearch = () => {
     if (term !== '') {
@@ -19,6 +23,10 @@ export default function SearchScreen({ navigation }) {
     }
   };
 
+  const addMovie = movie => {
+    dispatch(FetchMovie(movie));
+  };
+
   return (
     <View style={styles.container}>
       <SearchBar
@@ -27,7 +35,9 @@ export default function SearchScreen({ navigation }) {
         onTermSubmit={handleSearch}
       />
 
-      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+      {errorMessage ? (
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      ) : null}
 
       {showTrending ? (
         <Trending navigation={navigation} />
@@ -35,11 +45,13 @@ export default function SearchScreen({ navigation }) {
         <FlatList
           keyExtractor={item => item.id.toString()}
           data={movies}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <TouchableOpacity
               style={styles.movieItemContainer}
-              onPress={() => navigation.navigate('Show', { movieId: item.id })}
-            >
+              onPress={() => {
+                addMovie(item);
+                navigation.navigate('Show', {movieId: item.id});
+              }}>
               <MovieList
                 imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                 title={item.original_title}
