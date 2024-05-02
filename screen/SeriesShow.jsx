@@ -28,8 +28,12 @@ export function SeriesShow({route}) {
         style={{width: 300, height: 400, marginTop:30,marginBottom:30,borderRadius:10}}
       />
     
-    <Text  style={{color:"white",marginHorizontal:10,textAlign:'justify',margin:10}}>ID: {series.id}</Text>
-      <Text  style={{color:"white",marginHorizontal:10,textAlign:'justify'}}>{series.overview}</Text>
+    
+      <Text  style={{color:"white",marginHorizontal:10,textAlign:'justify',marginBottom:10}}>
+        <Text style={{fontWeight:"bold"}}>Popularity: </Text>{series.popularity}</Text>
+      <Text  style={{color:"white",marginHorizontal:10,textAlign:'justify',marginBottom:10}}><Text style={{fontWeight:"bold"}}>Vote Average:</Text>{series.vote_average}</Text>
+      <Text  style={{color:"white",marginHorizontal:10,textAlign:'justify',marginBottom:10}}><Text style={{fontWeight:"bold"}}>Vote Count: </Text>{series.vote_count}</Text>
+      <Text  style={{color:"white",marginHorizontal:10,textAlign:'center'}}>{series.overview}</Text>
     </View>
   );
 }

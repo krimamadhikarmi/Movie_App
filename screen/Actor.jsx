@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 15,
+    color:"green"
   },
   headerImage: {
     width: 150,
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
-    maxWidth: "40%", // 100% devided by the number of rows you want
+    maxWidth: "40%", 
     alignItems: "center",
     marginHorizontal:20,
     marginLeft:39,

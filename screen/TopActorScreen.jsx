@@ -37,7 +37,7 @@ export default function TopPeople({navigation}) {
                 }}
                 style={{width: 100, height: 100, borderRadius: 60, margin: 8}}
               />
-              <Text style={{color: 'white', margin: 8, fontWeight: 'bold',textAlign:"center"}}>
+              <Text style={{color: 'green', margin: 8, fontWeight: 'bold',textAlign:"center"}}>
                 {item.name}
               </Text>
              
@@ -55,5 +55,6 @@ const styles = StyleSheet.create({
         flex: 1,
         maxWidth: "50%", 
         alignItems: "center",
+        margin:10,
     },
 })

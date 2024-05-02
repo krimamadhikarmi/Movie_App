@@ -1,14 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, View, TouchableOpacity, Button } from 'react-native';
-import { useDispatch,useSelector} from 'react-redux';
-import { FetchMovie } from '../redux/MovieSlice';
+import React, {useEffect, useState} from 'react';
+import {
+  FlatList,
+  Image,
+  Text,
+  View,
+  TouchableOpacity,
+  Button,
+  ScrollView,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {FetchMovie} from '../redux/MovieSlice';
+import usePlay from './NowPlay';
+import useComing from './Upcoming';
 
-export function MovieTop({ navigation }) {
+export function MovieTop({navigation}) {
   const [topMovies, setTopMovies] = useState([]);
   const [popular, setPopular] = useState(false);
   const [topRated, setTopRated] = useState(false);
-  const [showAll, setShowAll] = useState(true); 
-  const dispatch=useDispatch();
+  const [showAll, setShowAll] = useState(true);
+  const [play, setPlay] = usePlay();
+  const [nowPlay, setNowPlay] = useState(false);
+  const [coming,setComing]=useComing();
+  const[upcoming,setUpComing]=useState(false);
+
+  const dispatch = useDispatch();
   const movieList = useSelector(state => state.movieshow);
 
   useEffect(() => {
@@ -16,7 +31,8 @@ export function MovieTop({ navigation }) {
       'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc',
       {
         headers: {
-          Authorization:'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+          Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
         },
       },
     )
@@ -33,6 +49,10 @@ export function MovieTop({ navigation }) {
       return topMovies.filter(movie => movie.popularity > 1200.0);
     } else if (topRated) {
       return topMovies.filter(movie => movie.vote_average > 7.0);
+    } else if (nowPlay) {
+      return play;
+    } else if (upcoming) {
+      return coming;
     } else {
       return topMovies;
     }
@@ -42,65 +62,101 @@ export function MovieTop({ navigation }) {
     setPopular(true);
     setTopRated(false);
     setShowAll(false);
+    setNowPlay(false);
+    setUpComing(false);
   };
 
   const handleTopRatedPress = () => {
     setTopRated(true);
     setPopular(false);
     setShowAll(false);
+    setNowPlay(false);
+    setUpComing(false);
+
+  
   };
 
   const handleShowAllPress = () => {
     setShowAll(true);
     setPopular(false);
     setTopRated(false);
+    setNowPlay(false);
+    setUpComing(false);
   };
 
+  const handlePlay = () => {
+    setNowPlay(true);
+    setShowAll(false);
+    setPopular(false);
+    setTopRated(false);
+    setUpComing(false);
+  };
+
+  const handleComing =()=>{
+    setNowPlay(false);
+    setShowAll(false);
+    setPopular(false);
+    setTopRated(false);
+    setUpComing(true);
+
+  }
 
   const addMovie = movie => {
     dispatch(FetchMovie(movie));
   };
 
-
-
   return (
-    <View style={{ flex: 1, backgroundColor: 'black', padding: 10 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          marginBottom: 10,
-        }}>
-        <View style={{ borderRadius: 50, overflow: 'hidden' }}>
+    <View style={{flex: 1, backgroundColor: 'black', padding: 10}}>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        style={{marginBottom: 10}}>
+        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
           <Button
             title="All Movies"
             onPress={handleShowAllPress}
-            color={showAll ? 'purple' : 'gray'} 
+            color={showAll ? 'purple' : 'gray'}
           />
         </View>
-        <View style={{ borderRadius: 50, overflow: 'hidden' }}>
+        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
           <Button
             title="Popular"
-            color={popular? 'blue':'gray'}
+            color={popular ? 'blue' : 'gray'}
             onPress={handlePopularPress}
           />
         </View>
-        <View style={{ borderRadius: 50, overflow: 'hidden' }}>
-          <Button title="Top Rated" 
-           color={topRated? 'red':'gray'}
-          onPress={handleTopRatedPress} />
+        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
+          <Button
+            title="Top Rated"
+            color={topRated ? 'red' : 'gray'}
+            onPress={handleTopRatedPress}
+          />
         </View>
-      </View>
+        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
+          <Button
+            title="Now Playing"
+            color={nowPlay ? 'plum' : 'gray'}
+            onPress={handlePlay}
+          />
+        </View>
+        <View style={{borderRadius: 50, overflow: 'hidden', marginRight: 10}}>
+          <Button
+            title="Upcoming"
+            color={upcoming ? 'plum' : 'gray'}
+            onPress={handleComing}
+          />
+        </View>
+      </ScrollView>
 
       <FlatList
         keyExtractor={item => item.id.toString()}
         data={filterMovies()}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <TouchableOpacity
-            onPress={() => 
-              { addMovie(item);
-                navigation.navigate('Show', { movieId: item.id })}}
-          >
+            onPress={() => {
+              addMovie(item);
+              navigation.navigate('Show', {movieId: item.id});
+            }}>
             <View
               style={{
                 alignItems: 'center',
@@ -108,13 +164,12 @@ export function MovieTop({ navigation }) {
                 backgroundColor: 'black',
                 borderRadius: 10,
                 padding: 10,
-              }}
-            >
+              }}>
               <Image
                 source={{
                   uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
                 }}
-                style={{ width: 300, height: 400, borderRadius: 10 }}
+                style={{width: 300, height: 400, borderRadius: 10}}
               />
               <Text
                 style={{
@@ -123,8 +178,7 @@ export function MovieTop({ navigation }) {
                   fontWeight: 'bold',
                   marginTop: 5,
                   fontSize: 18,
-                }}
-              >
+                }}>
                 {item.original_title}
               </Text>
             </View>
