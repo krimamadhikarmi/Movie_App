@@ -13,6 +13,9 @@ import TopPeople from './screen/TopActorScreen';
 import ActorCombine from './screen/Actor';
 import {Provider} from 'react-redux';
 import MyStore from './redux/MyStore';
+import {useEffect} from "react";
+
+import BootSplash from "react-native-bootsplash";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -98,6 +101,17 @@ function Home() {
   );
 }
 export default function App() {
+
+  useEffect(() => {
+    const init = async () => {
+      // …do multiple sync or async tasks
+    };
+
+    init().finally(async () => {
+      await BootSplash.hide({ fade: true });
+      console.log("BootSplash has been hidden successfully");
+    });
+  }, []);
   return (
     <View style={{flex: 1}}>
       <Provider store={MyStore}>
