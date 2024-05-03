@@ -59,19 +59,19 @@ export default function MovieShow({route, navigation}) {
             />
           </View>
           <Text style={styles.itemText}>
-            <Text style={{fontWeight: 'bold'}}>Original Language: </Text>{' '}
+            <Text style={styles.itemTitle}>Original Language:</Text>{' '}
             {movie.original_language}
           </Text>
           <Text style={styles.itemText}>
-            <Text style={{fontWeight: 'bold'}}>Popularity: </Text>
+            <Text style={styles.itemTitle}>Popularity: </Text>
             {movie.popularity}
           </Text>
           <Text style={styles.itemText}>
-            <Text style={{fontWeight: 'bold'}}>Vote Average: </Text>
+            <Text style={styles.itemTitle}>Vote Average: </Text>
             {movie.vote_average}
           </Text>
           <Text style={styles.itemText}>
-            <Text style={{fontWeight: 'bold'}}>Release Date: </Text>
+            <Text style={styles.itemTitle}>Release Date: </Text>
             {movie.release_date}
           </Text>
 
@@ -146,7 +146,12 @@ const styles = StyleSheet.create({
   itemText:{
     fontSize: 15, 
     flexDirection:"column",
-    textAlign: 'center', 
-    marginBottom: 5
-  }
+    textAlign:'center', 
+    marginBottom: 5,
+  },
+  itemTitle: {
+    fontWeight: 'bold',
+    color: 'crimson',
+    
+  },
 });

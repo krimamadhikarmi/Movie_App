@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Image, Text, View,ScrollView,StyleSheet} from 'react-native';
+import {Image, Text, View, ScrollView, StyleSheet} from 'react-native';
 
 export function SeriesShow({route}) {
   const {seriesId} = route.params;
@@ -19,7 +19,7 @@ export function SeriesShow({route}) {
   }, [setSeries]);
 
   return (
-    <ScrollView style={{backgroundColor:"black"}}>
+    <ScrollView style={{backgroundColor: 'black'}}>
       <Text style={styles.title}>{series.original_name}</Text>
       <Image
         source={{
@@ -27,45 +27,53 @@ export function SeriesShow({route}) {
         }}
         style={styles.itemImage}
       />
-    
-      <Text  style={styles.item}>
-        <Text style={{fontWeight:"bold"}}>Popularity: </Text>{series.popularity}</Text>
-      <Text  style={styles.item}>
-        <Text style={{fontWeight:"bold"}}>Vote Average:</Text>{series.vote_average}</Text>
-      <Text  style={styles.item}>
-        <Text style={{fontWeight:"bold"}}>Vote Count: </Text>{series.vote_count}</Text>
-      <Text  style={styles.itemText}>{series.overview}</Text>
+
+      <Text style={styles.item}>
+        <Text style={styles.itemTitle}>Popularity: </Text>
+        {series.popularity}
+      </Text>
+      <Text style={styles.item}>
+        <Text style={styles.itemTitle}>Vote Average: </Text>
+        {series.vote_average}
+      </Text>
+      <Text style={styles.item}>
+        <Text style={styles.itemTitle}>Vote Count: </Text>
+        {series.vote_count}
+      </Text>
+      <Text style={styles.itemText}>{series.overview}</Text>
     </ScrollView>
   );
 }
 
-
 const styles = StyleSheet.create({
-  title:{
-    color:"red",
-    marginTop:10,
-    fontSize:30,
-    fontWeight:'bold',
-    textAlign:"center"
+  title: {
+    color: 'red',
+    marginTop: 10,
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 
-  item:{
-    color:"white",
-    textAlign:'center',
-    marginBottom:10
+  item: {
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 10,
   },
-  itemImage:{
-    width: 300, 
-    height: 400, 
-    marginTop:10,
-    marginBottom:5,
-    borderRadius:30,
-    alignSelf:"center"
+  itemImage: {
+    width: 300,
+    height: 400,
+    marginTop: 10,
+    marginBottom: 10,
+    borderRadius: 30,
+    alignSelf: 'center',
   },
-  itemText:{
-    textAlign:"center",
-    color:"white",
-    marginHorizontal:15
-  }
-
-})
+  itemText: {
+    textAlign: 'center',
+    color: 'white',
+    marginHorizontal: 15,
+  },
+  itemTitle: {
+    fontWeight: 'bold',
+    color: 'crimson',
+  },
+});
