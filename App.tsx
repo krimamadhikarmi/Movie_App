@@ -131,7 +131,7 @@ export default function App() {
               }}
             />
             <Stack.Screen
-              name="Series"
+              name="SeriesShow"
               component={SeriesShow}
               options={{
                 title: 'Series',

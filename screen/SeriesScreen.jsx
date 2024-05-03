@@ -139,7 +139,7 @@ export function SeriesScreen({navigation}) {
           <TouchableOpacity
             onPress={() => {
               addSeries(item);
-              navigation.navigate('Series', {seriesId: item.id});
+              navigation.navigate('SeriesShow', {seriesId: item.id});
             }}>
             <View style={styles.seriesItemContainer}>
               <Image
