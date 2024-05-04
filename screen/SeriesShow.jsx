@@ -40,6 +40,12 @@ export function SeriesShow({route}) {
         <Text style={styles.itemTitle}>Vote Count: </Text>
         {series.vote_count}
       </Text>
+
+      <Text style={styles.itemText}>
+        <Text style={styles.itemTitle}>Seasons: </Text>
+        {series.seasons?.length}
+      </Text>
+
       <Text style={styles.itemText}>{series.overview}</Text>
     </ScrollView>
   );

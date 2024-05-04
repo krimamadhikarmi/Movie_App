@@ -1,10 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { FlatList, View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  FlatList,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Button,
+} from 'react-native';
+import FilterButton from '../components/Button';
 
-export default function ActorCombine({ route, navigation }) {
-  const { id } = route.params;
+export default function ActorCombine({route, navigation}) {
+  const {id} = route.params;
   const [actor, setActor] = useState([]);
   const [actorCredit, setActorCredit] = useState([]);
+  const [series, setSeries] = useState(false);
+  const [movie, setMovie] = useState(false);
+  const [all, setAll] = useState(true);
 
   useEffect(() => {
     fetchActorDetails();
@@ -26,17 +39,50 @@ export default function ActorCombine({ route, navigation }) {
   };
 
   const fetchActorCredits = () => {
-    fetch(`https://api.themoviedb.org/3/person/${id}/movie_credits?language=en-US`, {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+    fetch(
+      `https://api.themoviedb.org/3/person/${id}/combined_credits?language=en-US`,
+      {
+        headers: {
+          Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+        },
       },
-    })
+    )
       .then(response => response.json())
       .then(data => {
         setActorCredit(data.cast);
       })
       .catch(error => console.error('Error fetching actor credits:', error));
+  };
+
+  const filterCredits = () => {
+    if (all) {
+      return actorCredit;
+    } else if (movie) {
+      return actorCredit.filter(credit => credit.media_type == 'movie');
+    } else if (series) {
+      return actorCredit.filter(credit => credit.media_type == 'tv');
+    } else {
+      return actorCredit;
+    }
+  };
+
+  const handleAll = () => {
+    setAll(true);
+    setMovie(false);
+    setSeries(false);
+  };
+
+  const handleMovie = () => {
+    setAll(false);
+    setMovie(true);
+    setSeries(false);
+  };
+
+  const handleSeries = () => {
+    setAll(false);
+    setMovie(false);
+    setSeries(true);
   };
 
   const renderHeader = () => {
@@ -51,23 +97,42 @@ export default function ActorCombine({ route, navigation }) {
         />
         <Text style={styles.headerBio}>{actor.biography}</Text>
 
-        <Text style={{fontSize:25,fontWeight:"bold"}}>Works</Text>
+        <Text style={{fontSize: 25, fontWeight: 'bold'}}>Works</Text>
+
+        <View style={{flexDirection: 'row', marginTop: 10}}>
+          <FilterButton title={'all'} onPress={handleAll} isActive={all} />
+          <FilterButton
+            title={'movies'}
+            onPress={handleMovie}
+            isActive={movie}
+          />
+          <FilterButton
+            title={'series'}
+            onPress={handleSeries}
+            isActive={series}
+          />
+        </View>
       </View>
     );
   };
 
-  const filterMovie = actorCredit && actorCredit.length > 12 ? actorCredit.slice(0, 12) : actorCredit;
+  // const filterMovie = filterCredits && filterCredits.length > 12 ? filterCredits.slice(0, 12) : filterCredits;
 
   return (
-    <View style={{ backgroundColor: "black", flex: 1 }}>
+    <View style={{backgroundColor: 'black', flex: 1}}>
       <FlatList
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={renderHeader}
         keyExtractor={item => item.id.toString()}
         numColumns={2}
-        data={filterMovie}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('Show', { movieId: item.id })}>
+        data={filterCredits()}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            onPress={() =>
+              item.media_type == 'movie'
+                ? navigation.navigate('Show', {movieId: item.id})
+                : navigation.navigate('SeriesShow', {seriesId: item.id})
+            }>
             <View style={styles.item}>
               <Image
                 source={{
@@ -75,7 +140,9 @@ export default function ActorCombine({ route, navigation }) {
                 }}
                 style={styles.itemImage}
               />
-              <Text style={styles.itemText}>{item.title}</Text>
+             
+              <Text style={styles.itemText}>{item.media_type=="movie" ? item.title :item.original_name}</Text>
+              
             </View>
           </TouchableOpacity>
         )}
@@ -95,7 +162,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: "crimson",
+    color: 'crimson',
   },
   headerImage: {
     width: 150,
@@ -111,7 +178,7 @@ const styles = StyleSheet.create({
   item: {
     width: windowWidth / 2,
     alignItems: 'center',
-    padding:10
+    padding: 10,
   },
   itemImage: {
     width: '100%',

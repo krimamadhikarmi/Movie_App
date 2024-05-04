@@ -27,7 +27,9 @@ export function Trending({ navigation }) {
         keyExtractor={item => item.id.toString()}
         data={trending}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('Show', { movieId: item.id })}>
+          <TouchableOpacity onPress={() =>    item.media_type == 'movie'
+          ? navigation.navigate('Show', {movieId: item.id})
+          : navigation.navigate('SeriesShow', {seriesId: item.id})}>
             <View style={{ alignItems: 'center', marginVertical: 10, backgroundColor: 'black', borderRadius: 10, padding: 10 }}>
               <Image
                 source={{
@@ -36,7 +38,7 @@ export function Trending({ navigation }) {
                 style={{ width: 300, height: 400, borderRadius: 10 }}
               />
               <Text style={{ color: 'gray', textAlign: 'center', fontWeight: 'bold', marginTop: 5,fontSize:18 }}>
-                {item.original_title}
+                {item.media_type=="movie" ? item.title :item.original_name}
               </Text>
             </View>
           </TouchableOpacity>

@@ -51,11 +51,13 @@ export default function SearchScreen({navigation}) {
               style={styles.movieItemContainer}
               onPress={() => {
                 addMovie(item);
-                navigation.navigate('Show', {movieId: item.id});
+                item.media_type == 'movie'
+                ? navigation.navigate('Show', {movieId: item.id})
+                : navigation.navigate('SeriesShow', {seriesId: item.id})
               }}>
               <MovieList
                 imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                title={item.original_title}
+                title={item.media_type=="movie" ? item.title :item.original_name}
                 mid={item.id}
               />
             </TouchableOpacity>
