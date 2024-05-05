@@ -16,8 +16,8 @@ export default function ActorCombine({route, navigation}) {
   const [actor, setActor] = useState([]);
   const [actorCredit, setActorCredit] = useState([]);
   const [series, setSeries] = useState(false);
-  const [movie, setMovie] = useState(false);
-  const [all, setAll] = useState(true);
+  const [movie, setMovie] = useState(true);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchActorDetails();
@@ -56,31 +56,25 @@ export default function ActorCombine({route, navigation}) {
   };
 
   const filterCredits = () => {
-    if (all) {
-      return actorCredit;
-    } else if (movie) {
-      return actorCredit.filter(credit => credit.media_type == 'movie');
+    let filteredCredits = actorCredit;
+    if (movie) {
+      filteredCredits = filteredCredits.filter(
+        credit => credit.media_type === 'movie',
+      );
     } else if (series) {
-      return actorCredit.filter(credit => credit.media_type == 'tv');
-    } else {
-      return actorCredit;
+      filteredCredits = filteredCredits.filter(
+        credit => credit.media_type === 'tv',
+      );
     }
-  };
-
-  const handleAll = () => {
-    setAll(true);
-    setMovie(false);
-    setSeries(false);
+    return showAll ? filteredCredits : filteredCredits.slice(0, 6);
   };
 
   const handleMovie = () => {
-    setAll(false);
     setMovie(true);
     setSeries(false);
   };
 
   const handleSeries = () => {
-    setAll(false);
     setMovie(false);
     setSeries(true);
   };
@@ -96,11 +90,8 @@ export default function ActorCombine({route, navigation}) {
           style={styles.headerImage}
         />
         <Text style={styles.headerBio}>{actor.biography}</Text>
-
         <Text style={{fontSize: 25, fontWeight: 'bold'}}>Works</Text>
-
         <View style={{flexDirection: 'row', marginTop: 10}}>
-          <FilterButton title={'all'} onPress={handleAll} isActive={all} />
           <FilterButton
             title={'movies'}
             onPress={handleMovie}
@@ -112,26 +103,34 @@ export default function ActorCombine({route, navigation}) {
             isActive={series}
           />
         </View>
+        {actorCredit.length > 10 && !showAll && (
+        <TouchableOpacity onPress={() => setShowAll(true)} style={styles.button}>
+          <Text style={styles.buttonText}>View All</Text>
+        </TouchableOpacity>
+      )}
+      {showAll && (
+        <TouchableOpacity onPress={() => setShowAll(false)} style={styles.button}>
+          <Text style={styles.buttonText}>Show Less</Text>
+        </TouchableOpacity>
+      )}
       </View>
     );
   };
 
-  // const filterMovie = filterCredits && filterCredits.length > 12 ? filterCredits.slice(0, 12) : filterCredits;
-
   return (
-    <View style={{backgroundColor: 'black', flex: 1}}>
+    <View style={{ backgroundColor: 'black', flex: 1 }}>
       <FlatList
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={renderHeader}
         keyExtractor={item => item.id.toString()}
         numColumns={2}
         data={filterCredits()}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>
               item.media_type == 'movie'
-                ? navigation.navigate('Show', {movieId: item.id})
-                : navigation.navigate('SeriesShow', {seriesId: item.id})
+                ? navigation.navigate('Show', { movieId: item.id })
+                : navigation.navigate('SeriesShow', { seriesId: item.id })
             }>
             <View style={styles.item}>
               <Image
@@ -140,15 +139,18 @@ export default function ActorCombine({route, navigation}) {
                 }}
                 style={styles.itemImage}
               />
-             
-              <Text style={styles.itemText}>{item.media_type=="movie" ? item.title :item.original_name}</Text>
-              
+              <Text style={styles.itemText}>
+                {item.media_type === 'movie' ? item.title : item.original_name}
+              </Text>
             </View>
           </TouchableOpacity>
         )}
       />
+  
+      
     </View>
   );
+  
 }
 
 const windowWidth = Dimensions.get('window').width;
@@ -192,5 +194,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     color: 'crimson',
     borderRadius: 5,
+  },
+  button: {
+    marginTop: 20,
+    alignItems: 'center',
+    overflow:"hidden"
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
