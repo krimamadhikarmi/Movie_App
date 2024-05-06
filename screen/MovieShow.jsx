@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
   },
   movieContainer: {
     marginRight: 10,
+    marginLeft:10,
   },
   movieTitle: {
     fontSize: 12,
