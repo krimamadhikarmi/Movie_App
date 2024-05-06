@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, ScrollView, FlatList, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 
 export default function MovieShow({ route, navigation }) {
   const { movieId } = route.params;
@@ -38,8 +38,11 @@ export default function MovieShow({ route, navigation }) {
       .catch(error => console.error('Error fetching similar movies:', error));
   };
 
-  return (
-    <ScrollView style={{ backgroundColor: 'black' }}>
+
+
+  const renderHeader=()=>{
+    return(
+      <View style={{ backgroundColor: 'black' }}>
       {movie && (
         <View>
           <View>
@@ -65,17 +68,24 @@ export default function MovieShow({ route, navigation }) {
             {movie.release_date}
           </Text>
           <Text style={styles.itemText}>{movie.overview}</Text>
+          <Text style={styles.sectionTitle}>Similar Movies</Text>
         </View>
       )}
+     </View>
+    
+    )
+  }
 
-      <Text style={styles.sectionTitle}>Similar Movies</Text>
+  return (
+    <View style={{ backgroundColor: 'black'}}>
       <FlatList
-        horizontal
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
+        ListHeaderComponent={renderHeader}
         data={similar}
+        numColumns={2}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => navigation.push('Show', { movieId: item.id })}>
-            <View style={styles.movieContainer}>
+            <View style={styles.item}>
               <Image
                 source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
                 style={styles.movieImage}
@@ -87,9 +97,11 @@ export default function MovieShow({ route, navigation }) {
           </TouchableOpacity>
         )}
       />
-    </ScrollView>
+    </View>
   );
 }
+
+const windowWidth=Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   title: {
@@ -123,10 +135,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     color: 'white',
   },
-  movieContainer: {
-    marginRight: 10,
-    marginLeft:10,
-  },
+  // movieContainer: {
+  //   marginRight: 10,
+  //   marginLeft:10,
+  //   width: windowWidth/2
+  // },
   movieTitle: {
     fontSize: 12,
     fontWeight: 'bold',
@@ -135,12 +148,17 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   movieImage: {
-    width: 120,
-    height: 180,
+    width: '100%',
+    height: 200,
     borderRadius: 10,
     marginBottom: 10,
   },
   textContainer: {
     width: 120,
+  },
+  item: {
+    width: windowWidth / 2,
+    alignItems: 'center',
+    padding: 10,
   },
 });
