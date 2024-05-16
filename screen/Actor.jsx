@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import {
   FlatList,
   View,
@@ -7,7 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  Button,
+  ActivityIndicator,
 } from 'react-native';
 import FilterButton from '../components/Button';
 
@@ -18,13 +18,15 @@ export default function ActorCombine({route, navigation}) {
   const [series, setSeries] = useState(false);
   const [movie, setMovie] = useState(true);
   const [showAll, setShowAll] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchActorDetails();
     fetchActorCredits();
   }, []);
 
-  const fetchActorDetails = () => {
+  const fetchActorDetails = useCallback(() => {
+    setLoading(true);
     fetch(`https://api.themoviedb.org/3/person/${id}?language=en-US`, {
       headers: {
         Authorization:
@@ -34,11 +36,13 @@ export default function ActorCombine({route, navigation}) {
       .then(response => response.json())
       .then(data => {
         setActor(data);
+        setLoading(false);
       })
       .catch(error => console.error('Error fetching actor details:', error));
-  };
+  }, []);
 
-  const fetchActorCredits = () => {
+  const fetchActorCredits = useCallback(() => {
+    setLoading(true);
     fetch(
       `https://api.themoviedb.org/3/person/${id}/combined_credits?language=en-US`,
       {
@@ -51,11 +55,12 @@ export default function ActorCombine({route, navigation}) {
       .then(response => response.json())
       .then(data => {
         setActorCredit(data.cast);
+        setLoading(false);
       })
       .catch(error => console.error('Error fetching actor credits:', error));
-  };
+  }, []);
 
-  const filterCredits = () => {
+  const filterCredits = useMemo(() => {
     let filteredCredits = actorCredit;
     if (movie) {
       filteredCredits = filteredCredits.filter(
@@ -66,18 +71,19 @@ export default function ActorCombine({route, navigation}) {
         credit => credit.media_type === 'tv',
       );
     }
-    return showAll ? filteredCredits : filteredCredits.slice(0, 6);
-  };
+    return showAll ? filteredCredits : filteredCredits.slice(0, 4);
+  }, [movie, series, actorCredit, showAll]);
 
-  const handleMovie = () => {
+  const handleMovie = useCallback(() => {
     setMovie(true);
     setSeries(false);
-  };
+  }, []);
 
-  const handleSeries = () => {
-    setMovie(false);
+  const handleSeries = useCallback(() => {
     setSeries(true);
-  };
+    setMovie(false);
+  }, []);
+  
 
   const renderHeader = () => {
     return (
@@ -90,8 +96,8 @@ export default function ActorCombine({route, navigation}) {
           style={styles.headerImage}
         />
         <Text style={styles.headerBio}>{actor.biography}</Text>
-        <Text style={{fontSize: 25, fontWeight: 'bold'}}>Works</Text>
-        <View style={{flexDirection: 'row', marginTop: 10}}>
+        <Text style={styles.workTitle}>Works</Text>
+        <View style={styles.buttonStyle}>
           <FilterButton
             title={'movies'}
             onPress={handleMovie}
@@ -103,54 +109,70 @@ export default function ActorCombine({route, navigation}) {
             isActive={series}
           />
         </View>
+
         {actorCredit.length > 10 && !showAll && (
-        <TouchableOpacity onPress={() => setShowAll(true)} style={styles.button}>
-          <Text style={styles.buttonText}>View All</Text>
-        </TouchableOpacity>
-      )}
-      {showAll && (
-        <TouchableOpacity onPress={() => setShowAll(false)} style={styles.button}>
-          <Text style={styles.buttonText}>Show Less</Text>
-        </TouchableOpacity>
-      )}
+          <TouchableOpacity
+            onPress={() => setShowAll(true)}
+            style={styles.button}>
+            <Text style={styles.buttonText}>View All</Text>
+          </TouchableOpacity>
+        )}
+        
+        {showAll && (
+          <TouchableOpacity
+            onPress={() => setShowAll(false)}
+            style={styles.button}>
+            <Text style={styles.buttonText}>Show Less</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
 
+  const handleItemPress = item => {
+    item.media_type == 'movie'
+      ? navigation.navigate('Show', {movieId: item.id})
+      : navigation.navigate('SeriesShow', {seriesId: item.id});
+  };
+
   return (
-    <View style={{ backgroundColor: 'black', flex: 1 }}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={renderHeader}
-        keyExtractor={item => item.id.toString()}
-        numColumns={2}
-        data={filterCredits()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() =>
-              item.media_type == 'movie'
-                ? navigation.navigate('Show', { movieId: item.id })
-                : navigation.navigate('SeriesShow', { seriesId: item.id })
-            }>
-            <View style={styles.item}>
-              <Image
-                source={{
-                  uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
-                }}
-                style={styles.itemImage}
-              />
-              <Text style={styles.itemText}>
-                {item.media_type === 'movie' ? item.title : item.original_name}
-              </Text>
+    <View style={{backgroundColor: 'black', flex: 1}}>
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color="#ffffff"
+          style={styles.loadingIndicator}
+        />
+      ) : (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={renderHeader}
+          keyExtractor={item => item.id.toString()}
+          numColumns={2}
+          data={filterCredits}
+          renderItem={({item}) => (
+            <View style={styles.listItem}>
+              <TouchableOpacity onPress={() => handleItemPress(item)}>
+                <View style={styles.item}>
+                  <Image
+                    source={{
+                      uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+                    }}
+                    style={styles.itemImage}
+                  />
+                  <Text style={styles.itemText}>
+                    {item.media_type === 'movie'
+                      ? item.title
+                      : item.original_name}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        )}
-      />
-  
-      
+          )}
+        />
+      )}
     </View>
   );
-  
 }
 
 const windowWidth = Dimensions.get('window').width;
@@ -198,11 +220,28 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 20,
     alignItems: 'center',
-    overflow:"hidden"
+    overflow: 'hidden',
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  workTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  buttonStyle: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  listItem: {
+    flex: 1,
+    backgroundColor: 'black',
   },
 });

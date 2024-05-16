@@ -1,31 +1,50 @@
-import React, {useState} from 'react';
-import {FlatList, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
-import {SearchBar} from '../components/SearchBar';
+import React, {useCallback, useState, memo} from 'react';
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  VirtualizedList,
+  ActivityIndicator,
+} from 'react-native';
+import SearchBar from '../components/SearchBar';
 import {useMovie} from '../hooks/useMovie';
 import MovieList from '../components/MovieList';
-import {Trending} from '../components/TrendingMovie';
-import {FetchMovie} from '../redux/MovieSlice';
-import {useDispatch, useSelector} from 'react-redux';
+import Trending from '../components/TrendingMovie';
 
-export default function SearchScreen({navigation}) {
+const SearchScreen = ({navigation}) => {
   const [term, setTerm] = useState('');
-  const [movies, searchApi, errorMessage] = useMovie();
+  const [movies, searchApi, errorMessage, loading] = useMovie();
   const [showTrending, setShowTrending] = useState(true);
-  const dispatch = useDispatch();
-  const movieList = useSelector(state => state.movieshow);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     if (term !== '') {
       setShowTrending(false);
       searchApi(term);
     } else {
       setShowTrending(true);
     }
+  },[term]);
+
+  const handleItemPress = item => {
+    item.media_type == 'movie'
+      ? navigation.navigate('Show', {movieId: item.id})
+      : navigation.navigate('SeriesShow', {seriesId: item.id});
   };
 
-  const addMovie = movie => {
-    dispatch(FetchMovie(movie));
-  };
+  const renderItem = ({item}) => (
+    <TouchableOpacity
+      style={styles.movieItemContainer}
+      onPress={() => {
+        handleItemPress(item);
+      }}>
+      <MovieList
+        imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+        title={item.media_type == 'movie' ? item.title : item.original_name}
+        mid={item.id}
+      />
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -42,31 +61,29 @@ export default function SearchScreen({navigation}) {
       {showTrending ? (
         <Trending navigation={navigation} />
       ) : (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => item.id.toString()}
-          data={movies}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              style={styles.movieItemContainer}
-              onPress={() => {
-                addMovie(item);
-                item.media_type == 'movie'
-                ? navigation.navigate('Show', {movieId: item.id})
-                : navigation.navigate('SeriesShow', {seriesId: item.id})
-              }}>
-              <MovieList
-                imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                title={item.media_type=="movie" ? item.title :item.original_name}
-                mid={item.id}
-              />
-            </TouchableOpacity>
+        <>
+          {loading ? (
+            <ActivityIndicator
+              size="large"
+              color="#ffffff"
+              style={styles.loadingIndicator}
+            />
+          ) : (
+            <VirtualizedList
+              showsVerticalScrollIndicator={false}
+              keyExtractor={item => item.id.toString()}
+              data={movies}
+              getItem={(data, index) => data[index]}
+              getItemCount={() => movies.length}
+              initialNumToRender={5}
+              renderItem={renderItem}
+            />
           )}
-        />
+        </>
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -87,4 +104,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
   },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
+export default SearchScreen;

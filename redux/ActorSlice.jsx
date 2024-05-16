@@ -7,7 +7,7 @@ const ActorSlice = createSlice({
     initialState,
     reducers: {
         fetchActor(state,action){
-            state.push(action.payload);
+            return [...state, action.payload];
         },
     },
 });

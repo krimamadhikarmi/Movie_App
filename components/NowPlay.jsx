@@ -1,9 +1,13 @@
-import {useState,useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 
 export default function usePlay() {
   const [play, setPlay] = useState([]);
 
   useEffect(() => {
+    fetchPlay();
+  }, []);
+
+  const fetchPlay = useCallback(() => {
     fetch(
       'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1',
       {
@@ -19,5 +23,7 @@ export default function usePlay() {
       });
   }, []);
 
-  return [play,setPlay];
+  
+
+  return [play, setPlay];
 }

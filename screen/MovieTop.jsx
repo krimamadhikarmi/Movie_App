@@ -1,21 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo, useCallback} from 'react';
 import {
-  FlatList,
   Image,
   Text,
   View,
   TouchableOpacity,
-  Button,
-  ScrollView,
+  VirtualizedList,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
+
 import {useDispatch, useSelector} from 'react-redux';
 import {FetchMovie} from '../redux/MovieSlice';
+
 import usePlay from '../components/NowPlay';
 import useComing from '../components/UpcomingMovie';
 import FilterButton from '../components/Button';
 
-export function MovieTop({navigation}) {
-  const [topMovies, setTopMovies] = useState([]);
+const MovieTop = ({navigation}) => {
   const [popular, setPopular] = useState(false);
   const [topRated, setTopRated] = useState(false);
   const [showAll, setShowAll] = useState(true);
@@ -23,11 +25,17 @@ export function MovieTop({navigation}) {
   const [nowPlay, setNowPlay] = useState(false);
   const [coming, setComing] = useComing();
   const [upcoming, setUpComing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
   const movieList = useSelector(state => state.movieshow);
+  const [topMovies, setTopMovies] = useState([]);
 
   useEffect(() => {
+    fetchMovie();
+  }, []);
+
+  const fetchMovie = () => {
     fetch(
       'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc',
       {
@@ -40,140 +48,171 @@ export function MovieTop({navigation}) {
       .then(response => response.json())
       .then(data => {
         setTopMovies(data.results);
+        setLoading(false);
       });
-  }, []);
-
-  const filterMovies = () => {
-    if (showAll) {
-      return topMovies;
-    } else if (popular) {
-      return topMovies.filter(movie => movie.popularity > 1200.0);
-    } else if (topRated) {
-      return topMovies.filter(movie => movie.vote_average > 7.0);
-    } else if (nowPlay) {
-      return play;
-    } else if (upcoming) {
-      return coming;
-    } else {
-      return topMovies;
-    }
   };
 
-  const handlePopularPress = () => {
+  const filterMovies = useMemo(() => {
+    let filteredMovies = topMovies;
+    if (!showAll) {
+      if (popular) {
+        filteredMovies = filteredMovies.filter(
+          movie => movie.popularity > 1200.0,
+        );
+      } else if (topRated) {
+        filteredMovies = filteredMovies.filter(
+          movie => movie.vote_average > 7.0,
+        );
+      } else if (nowPlay) {
+        filteredMovies = play;
+      } else if (upcoming) {
+        filteredMovies = coming;
+      }
+    }
+    return filteredMovies;
+  }, [showAll, popular, topRated, nowPlay, upcoming, topMovies, play, coming]);
+
+  const handlePopularPress = useCallback(() => {
     setPopular(true);
     setTopRated(false);
     setShowAll(false);
     setNowPlay(false);
     setUpComing(false);
-  };
+  }, []);
 
-  const handleTopRatedPress = () => {
+  const handleTopRatedPress = useCallback(() => {
     setTopRated(true);
     setPopular(false);
     setShowAll(false);
     setNowPlay(false);
     setUpComing(false);
-  };
+  }, []);
 
-  const handleShowAllPress = () => {
+  const handleShowAllPress = useCallback(() => {
     setShowAll(true);
     setPopular(false);
     setTopRated(false);
     setNowPlay(false);
     setUpComing(false);
-  };
+  }, []);
 
-  const handlePlay = () => {
+  const handlePlay = useCallback(() => {
     setNowPlay(true);
     setShowAll(false);
     setPopular(false);
     setTopRated(false);
     setUpComing(false);
-  };
+  }, []);
 
-  const handleComing = () => {
+  const handleComing = useCallback(() => {
+    setUpComing(true);
     setNowPlay(false);
     setShowAll(false);
     setPopular(false);
     setTopRated(false);
-    setUpComing(true);
-  };
+  }, []);
 
   const addMovie = movie => {
     dispatch(FetchMovie(movie));
   };
 
-  return (
-    <View style={{flex: 1, backgroundColor: 'black', padding: 10}}>
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        style={{marginBottom: 10}}>
-        <FilterButton
-          title="All Movies"
-          onPress={handleShowAllPress}
-          isActive={showAll}
-        />
-        <FilterButton
-          title="Popular"
-          onPress={handlePopularPress}
-          isActive={popular}
-        />
-        <FilterButton
-          title="Top Rated"
-          onPress={handleTopRatedPress}
-          isActive={topRated}
-        />
-        <FilterButton
-          title="Now Playing"
-          onPress={handlePlay}
-          isActive={nowPlay}
-        />
-        <FilterButton
-          title="Upcoming"
-          onPress={handleComing}
-          isActive={upcoming}
-        />
-      </ScrollView>
+  const handleItemPress = useCallback(item => {
+    addMovie(item);
+    navigation.navigate('Show', {movieId: item.id});
+  }, []);
 
+  const renderItem = useCallback(({item}) => (
+    <TouchableOpacity onPress={() => handleItemPress(item)}>
+      <View style={styles.container}>
+        <Image
+          source={{uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`}}
+          style={styles.movieImage}
+        />
+        <Text style={styles.movieText}>{item.original_title}</Text>
+      </View>
+    </TouchableOpacity>
+  ),[handleItemPress]);
+
+  const filterbutton = [
+    {title: 'All Movies', onPress: handleShowAllPress, isActive: showAll},
+    {title: 'Popular', onPress: handlePopularPress, isActive: popular},
+    {title: 'Top Rated', onPress: handleTopRatedPress, isActive: topRated},
+    {title: 'Now Playing', onPress: handlePlay, isActive: nowPlay},
+    {title: 'Upcoming', onPress: handleComing, isActive: upcoming},
+  ];
+
+  return (
+    <View style={styles.viewItem}>
       <FlatList
-        showsVerticalScrollIndicator={false}
-        keyExtractor={item => item.id.toString()}
-        data={filterMovies()}
+        horizontal
+        keyExtractor={(item, index) => item.title}
+        data={filterbutton}
         renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() => {
-              addMovie(item);
-              navigation.navigate('Show', {movieId: item.id});
-            }}>
-            <View
-              style={{
-                alignItems: 'center',
-                marginVertical: 10,
-                backgroundColor: 'black',
-                borderRadius: 10,
-                padding: 10,
-              }}>
-              <Image
-                source={{
-                  uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
-                }}
-                style={{width: 300, height: 400, borderRadius: 10}}
-              />
-              <Text
-                style={{
-                  color: 'gray',
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  marginTop: 5,
-                  fontSize: 18,
-                }}>
-                {item.original_title}
-              </Text>
-            </View>
-          </TouchableOpacity>
+          <FilterButton
+            title={item.title}
+            onPress={item.onPress}
+            isActive={item.isActive}
+          />
         )}
       />
+
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color="#ffffff"
+          style={styles.loadingIndicator}
+        />
+      ) : (
+        <VirtualizedList
+          showsVerticalScrollIndicator={false}
+          data={filterMovies}
+          initialNumToRender={4}
+          renderItem={renderItem}
+          keyExtractor={item => item.id.toString()}
+          getItemCount={() => filterMovies.length}
+          getItem={(data, index) => data[index]}
+        />
+      )}
     </View>
   );
-}
+};
+
+export default MovieTop;
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    marginVertical: 10,
+    backgroundColor: 'black',
+    borderRadius: 10,
+    padding: 10,
+  },
+  errorText: {
+    alignSelf: 'center',
+    marginVertical: 20,
+    color: 'red',
+    fontSize: 16,
+  },
+  movieImage: {
+    width: 300,
+    height: 400,
+    borderRadius: 10,
+  },
+  movieText: {
+    color: 'gray',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: 5,
+    fontSize: 18,
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewItem: {
+    flex: 1,
+    backgroundColor: 'black',
+    padding: 10,
+  },
+});

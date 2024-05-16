@@ -1,9 +1,9 @@
-import {useState,useEffect} from 'react';
+import {useState,useEffect, useCallback} from 'react';
 
 export default function useComing() {
   const [coming, setComing] = useState([]);
 
-  useEffect(() => {
+  const fetchComing=useCallback(()=>{
     fetch(
       'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1',
       {
@@ -17,6 +17,10 @@ export default function useComing() {
       .then(data => {
         setComing(data.results);
       });
+
+  },[])
+  useEffect(() => {
+    fetchComing();
   }, []);
 
   return [coming,setComing];

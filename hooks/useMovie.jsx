@@ -1,12 +1,13 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 
 
 export function useMovie() {
   const [movies, setMovies] = useState([]);
   const [errorMessage, setError] = useState('');
-
+  const [loading,setLoading]=useState(true);
 
   function searchApi(term) {
+    setLoading(true);
     fetch(
       `https://api.themoviedb.org/3/search/multi?query=${term}&include_adult=false&language=en-US&page=1`,
       {
@@ -21,6 +22,7 @@ export function useMovie() {
         if (data.results) {
           setMovies(data.results);
           setError('');
+          setLoading(false);
           
         } else {
           setError('No results found.');
@@ -28,5 +30,5 @@ export function useMovie() {
       });
   }
 
-  return [movies, searchApi, errorMessage];
+  return [movies, searchApi, errorMessage,loading,setLoading];
 }

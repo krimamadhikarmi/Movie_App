@@ -2,16 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = [];
 
-const MovieSlice = createSlice({
-    name: 'movieshow',
+const TrendSlice = createSlice({
+    name: 'trendmovie',
     initialState,
     reducers: {
-        FetchMovie(state,action){
+        addtrendMovie(state,action){
             return [...state, action.payload];
         }
     },
 });
 
 
-export const {FetchMovie} = MovieSlice.actions;
-export default MovieSlice.reducer;
+export const {addtrendMovie} = TrendSlice.actions;
+export default TrendSlice.reducer;

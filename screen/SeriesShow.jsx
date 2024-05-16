@@ -6,22 +6,25 @@ import {
   ScrollView,
   StyleSheet,
   FlatList,
-  Touchable,
   TouchableOpacity,
+  Dimensions,
+  ActivityIndicator,
 } from 'react-native';
-import {fetchSeries} from '../redux/SeriesSlice';
+import {SeriesData} from '../components/SeriesData';
 
 export function SeriesShow({route, navigation}) {
   const {seriesId} = route.params;
   const [series, setSeries] = useState([]);
   const [similar, setSimilar] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchSeriesDetails();
     fetchSimilar();
-  }, [seriesId]);
+  }, []);
 
   const fetchSeriesDetails = () => {
+    setLoading(true);
     fetch(`https://api.themoviedb.org/3/tv/${seriesId}?language=en-US`, {
       headers: {
         Authorization:
@@ -31,6 +34,7 @@ export function SeriesShow({route, navigation}) {
       .then(response => response.json())
       .then(data => {
         setSeries(data);
+        setLoading(false);
       });
   };
 
@@ -47,104 +51,55 @@ export function SeriesShow({route, navigation}) {
       .then(response => response.json())
       .then(data => {
         setSimilar(data.results);
+        setLoading(false);
       });
   };
 
+  const handleItemPress = item => {
+    navigation.push('SeriesShow', {seriesId: item.id});
+  };
+
+  const ItemList = ({item}) => {
+    return (
+      <TouchableOpacity onPress={() => handleItemPress(item)}>
+        <View style={styles.item}>
+          <Image
+            source={{
+              uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+            }}
+            style={styles.movieImage}
+          />
+          <View style={styles.textContainer}>
+            <Text style={styles.movieTitle}>{item.original_name}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
-    <ScrollView style={{backgroundColor: 'black'}}>
-      <Text style={styles.title}>{series.original_name}</Text>
-      <Image
-        source={{
-          uri: `https://image.tmdb.org/t/p/w500${series.poster_path}`,
-        }}
-        style={styles.itemImage}
-      />
-
-      <Text style={styles.item}>
-        <Text style={styles.itemTitle}>Popularity: </Text>
-        {series.popularity}
-      </Text>
-      <Text style={styles.item}>
-        <Text style={styles.itemTitle}>Vote Average: </Text>
-        {series.vote_average}
-      </Text>
-      <Text style={styles.item}>
-        <Text style={styles.itemTitle}>Vote Count: </Text>
-        {series.vote_count}
-      </Text>
-
-      <Text style={styles.itemText}>
-        <Text style={styles.itemTitle}>Seasons: </Text>
-        {series.seasons?.length}
-      </Text>
-
-      <Text style={styles.itemText}>{series.overview}</Text>
-
-      <Text style={styles.sectionTitle}>Similar Series</Text>
-      <FlatList
-        horizontal
-        keyExtractor={item => item.id}
-        data={similar}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() => navigation.push('SeriesShow', {seriesId: item.id})}>
-            <View style={styles.seriesContainer}>
-              <Image
-                source={{
-                  uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
-                }}
-                style={styles.seriesImage}
-              />
-              <View style={styles.textContainer}>
-                <Text style={styles.seriesTitle}>{item.original_name}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
-    </ScrollView>
+    <View style={styles.container}>
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color="#ffffff"
+          style={styles.loadingIndicator}
+        />
+      ) : (
+        <FlatList
+          keyExtractor={item => item.id}
+          data={similar}
+          numColumns={2}
+          renderItem={({item}) => <ItemList item={item} />}
+          ListHeaderComponent={<SeriesData series={series} />}
+        />
+      )}
+    </View>
   );
 }
+const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-  title: {
-    color: 'red',
-    marginTop: 10,
-    fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-
-  item: {
-    color: 'white',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  itemImage: {
-    width: 300,
-    height: 400,
-    marginTop: 10,
-    marginBottom: 10,
-    borderRadius: 30,
-    alignSelf: 'center',
-  },
-  itemText: {
-    textAlign: 'center',
-    color: 'white',
-    marginHorizontal: 15,
-  },
-  itemTitle: {
-    fontWeight: 'bold',
-    color: 'crimson',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 10,
-    marginHorizontal: 10,
-    color: 'white',
-  },
   seriesImage: {
     width: 120,
     height: 180,
@@ -166,4 +121,34 @@ const styles = StyleSheet.create({
   textContainer: {
     width: 120,
   },
+  movieTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+    color: 'white',
+  },
+  movieImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  textContainer: {
+    width: 120,
+  },
+  item: {
+    width: windowWidth / 2,
+    alignItems: 'center',
+    padding: 10,
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container:{
+    backgroundColor: 'black',
+    flex: 1
+  }
 });

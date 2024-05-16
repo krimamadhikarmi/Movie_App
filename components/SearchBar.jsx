@@ -1,16 +1,17 @@
-import React from 'react';
+import React,{memo} from 'react';
 import { Text, TextInput, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export function SearchBar({ term, onTermChange, onTermSubmit }) {
+
+const SearchBar = ({ term, onTermChange, onTermSubmit })=>{
+  
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Icon name="search" style={styles.icon} />
         <TextInput
           style={styles.input}
-          placeholder="Search Tv / Movies"
-          
+          placeholder=" Search Tv or Movies"
           value={term}
           onChangeText={newTerm => onTermChange(newTerm)}
           onEndEditing={onTermSubmit}
@@ -18,7 +19,7 @@ export function SearchBar({ term, onTermChange, onTermSubmit }) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -45,3 +46,5 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
 });
+
+export default memo(SearchBar);

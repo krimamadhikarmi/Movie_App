@@ -13,10 +13,10 @@ export default function usePlaySeries() {
         },
       },
     )
-      .then(response => response.json())
-      .then(data => {
+    .then(response => response.json())
+    .then(data => {
         setPlay(data.results);
-      });
+    });
   }, []);
 
   return [play,setPlay];

@@ -6,11 +6,11 @@ const seriesSlice = createSlice({
     name: 'seriesshow',
     initialState,
     reducers: {
-        fetchSeries(state,action){
-            state.push(action.payload);
+        fetchSeries(state, action) {
+            return [...state, action.payload];
         },
     },
 });
 
-export const {fetchSeries} = seriesSlice.actions;
+export const { fetchSeries } = seriesSlice.actions;
 export default seriesSlice.reducer;

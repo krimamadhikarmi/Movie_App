@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback, memo} from 'react';
 import {
   View,
   Text,
@@ -7,17 +7,20 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchActor} from '../redux/ActorSlice';
 
-export default function TopPeople({navigation}) {
+const TopPeople = ({navigation}) => {
   const [people, setPeople] = useState();
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
   const actorList = useSelector(state => state.actorshow);
 
   useEffect(() => {
+    setLoading(true);
     fetch('https://api.themoviedb.org/3/person/popular?language=en-US&page=1', {
       headers: {
         Authorization:
@@ -27,54 +30,65 @@ export default function TopPeople({navigation}) {
       .then(response => response.json())
       .then(data => {
         setPeople(data.results);
+        setLoading(false);
       });
   }, []);
 
-  const addActor = actor => {
-    dispatch(fetchActor(actor));
+  const addActor = useCallback(
+    actor => {
+      dispatch(fetchActor(actor));
+    },
+    [dispatch],
+  );
+
+  const handleItemPress = item => {
+    addActor(item);
+    navigation.navigate('Act', {
+      id: item.id,
+      movie: item.known_for,
+    });
   };
+
+  const renderItem = useCallback( ({item}) => (
+    
+    <View style={styles.item}>
+      <TouchableOpacity
+        onPress={() => {
+          handleItemPress(item);
+        }}>
+        <Image
+          source={{
+            uri: `https://image.tmdb.org/t/p/w500${item.profile_path}`,
+          }}
+          style={styles.itemImage}
+        />
+        <Text style={styles.itemText}>{item.name}</Text>
+      </TouchableOpacity>
+    </View>
+  ),[handleItemPress]);
 
   const filterPeople =
     people && people.length > 10 ? people.slice(0, 10) : people;
   return (
-    <View style={{backgroundColor: 'black'}}>
-      <FlatList
-       showsVerticalScrollIndicator={false}
-        keyExtractor={item => item.name}
-        numColumns={2}
-        data={filterPeople}
-        renderItem={({item}) => (
-          <View style={styles.item}>
-            <TouchableOpacity
-              onPress={() => {
-                addActor(item);
-                navigation.navigate('Act', {
-                  id: item.id,
-                  movie: item.known_for,
-                });
-              }}>
-              <Image
-                source={{
-                  uri: `https://image.tmdb.org/t/p/w500${item.profile_path}`,
-                }}
-                style={{width: 100, height: 100, borderRadius: 60, margin: 8}}
-              />
-              <Text
-                style={{
-                  color: 'gray',
-                  margin: 8,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}>
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+    <View style={styles.container}>
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color="#ffffff"
+          style={styles.loadingIndicator}
+        />
+      ) : (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          keyExtractor={item => item.name}
+          numColumns={2}
+          data={filterPeople}
+          renderItem={renderItem}
+        />
+      )}
     </View>
   );
-}
+};
 const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   item: {
@@ -83,4 +97,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
   },
+  itemText: {
+    color: 'gray',
+    margin: 8,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  itemImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 60,
+    margin: 8,
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container:{
+    flex: 1, 
+    backgroundColor: 'black'
+  }
 });
+
+export default TopPeople;
