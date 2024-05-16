@@ -16,6 +16,7 @@ import {FetchMovie} from '../redux/MovieSlice';
 import usePlay from '../components/NowPlay';
 import useComing from '../components/UpcomingMovie';
 import FilterButton from '../components/Button';
+import fetchApi from '../hooks/useApi';
 
 const MovieTop = ({navigation}) => {
   const [popular, setPopular] = useState(false);
@@ -36,20 +37,25 @@ const MovieTop = ({navigation}) => {
   }, []);
 
   const fetchMovie = () => {
-    fetch(
-      'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc',
-      {
-        headers: {
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-        },
-      },
-    )
-      .then(response => response.json())
+    // fetch(
+    //   'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc',
+    //   {
+    //     headers: {
+    //       Authorization:
+    //         'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+    //     },
+    //   },
+    // )
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     setTopMovies(data.results);
+    //     setLoading(false);
+    //   });
+    fetchApi('https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc')
       .then(data => {
-        setTopMovies(data.results);
-        setLoading(false);
-      });
+      setTopMovies(data.results);
+      setLoading(false);
+    });
   };
 
   const filterMovies = useMemo(() => {
@@ -121,17 +127,20 @@ const MovieTop = ({navigation}) => {
     navigation.navigate('Show', {movieId: item.id});
   }, []);
 
-  const renderItem = useCallback(({item}) => (
-    <TouchableOpacity onPress={() => handleItemPress(item)}>
-      <View style={styles.container}>
-        <Image
-          source={{uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`}}
-          style={styles.movieImage}
-        />
-        <Text style={styles.movieText}>{item.original_title}</Text>
-      </View>
-    </TouchableOpacity>
-  ),[handleItemPress]);
+  const renderItem = useCallback(
+    ({item}) => (
+      <TouchableOpacity onPress={() => handleItemPress(item)}>
+        <View style={styles.container}>
+          <Image
+            source={{uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`}}
+            style={styles.movieImage}
+          />
+          <Text style={styles.movieText}>{item.original_title}</Text>
+        </View>
+      </TouchableOpacity>
+    ),
+    [handleItemPress],
+  );
 
   const filterbutton = [
     {title: 'All Movies', onPress: handleShowAllPress, isActive: showAll},

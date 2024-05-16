@@ -12,6 +12,7 @@ import {
 
 import {addtrendMovie} from '../redux/TrendSlice';
 import {useDispatch, useSelector} from 'react-redux';
+import fetchApi from '../hooks/useApi';
 
 const Trending = ({navigation}) => {
   const [trending, setTrending] = useState([]);
@@ -26,14 +27,7 @@ const Trending = ({navigation}) => {
 
 
   const fetchTrending = useCallback(() => {
-    setLoading(true);
-    fetch('https://api.themoviedb.org/3/trending/all/day?language=en-US', {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-      },
-    })
-      .then(response => response.json())
+    fetchApi('https://api.themoviedb.org/3/trending/all/day?language=en-US')
       .then(data => {
         setTrending(data.results);
         setLoading(false);

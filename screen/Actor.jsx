@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import FilterButton from '../components/Button';
+import fetchApi from '../hooks/useApi';
 
 export default function ActorCombine({route, navigation}) {
   const {id} = route.params;
@@ -26,14 +27,15 @@ export default function ActorCombine({route, navigation}) {
   }, []);
 
   const fetchActorDetails = useCallback(() => {
-    setLoading(true);
-    fetch(`https://api.themoviedb.org/3/person/${id}?language=en-US`, {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-      },
-    })
-      .then(response => response.json())
+    // setLoading(true);
+    // fetch(`https://api.themoviedb.org/3/person/${id}?language=en-US`, {
+    //   headers: {
+    //     Authorization:
+    //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+    //   },
+    // })
+    //   .then(response => response.json())
+    fetchApi(`https://api.themoviedb.org/3/person/${id}?language=en-US`)
       .then(data => {
         setActor(data);
         setLoading(false);
@@ -42,17 +44,20 @@ export default function ActorCombine({route, navigation}) {
   }, []);
 
   const fetchActorCredits = useCallback(() => {
-    setLoading(true);
-    fetch(
+    // setLoading(true);
+    // fetch(
+    //   `https://api.themoviedb.org/3/person/${id}/combined_credits?language=en-US`,
+    //   {
+    //     headers: {
+    //       Authorization:
+    //         'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+    //     },
+    //   },
+    // )
+    //   .then(response => response.json())
+    fetchApi(
       `https://api.themoviedb.org/3/person/${id}/combined_credits?language=en-US`,
-      {
-        headers: {
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-        },
-      },
     )
-      .then(response => response.json())
       .then(data => {
         setActorCredit(data.cast);
         setLoading(false);
@@ -83,7 +88,6 @@ export default function ActorCombine({route, navigation}) {
     setSeries(true);
     setMovie(false);
   }, []);
-  
 
   const renderHeader = () => {
     return (
@@ -117,7 +121,7 @@ export default function ActorCombine({route, navigation}) {
             <Text style={styles.buttonText}>View All</Text>
           </TouchableOpacity>
         )}
-        
+
         {showAll && (
           <TouchableOpacity
             onPress={() => setShowAll(false)}

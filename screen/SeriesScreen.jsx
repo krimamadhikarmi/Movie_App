@@ -13,6 +13,7 @@ import {fetchSeries} from '../redux/SeriesSlice';
 import FilterButton from '../components/Button';
 import useComingSeries from '../components/UpcomingSeries';
 import usePlaySeries from '../components/PlayingSeries';
+import fetchApi from '../hooks/useApi';
 
 export function SeriesScreen({navigation}) {
   const [topSeries, setTopSeries] = useState([]);
@@ -32,14 +33,15 @@ export function SeriesScreen({navigation}) {
   }, []);
 
   const fetchData = useCallback(() => {
-    setLoading(true);
-    fetch('https://api.themoviedb.org/3/trending/tv/day?language=en-US', {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-      },
-    })
-      .then(response => response.json())
+    // setLoading(true);
+    // fetch('https://api.themoviedb.org/3/trending/tv/day?language=en-US', {
+    //   headers: {
+    //     Authorization:
+    //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+    //   },
+    // })
+    //   .then(response => response.json())
+    fetchApi('https://api.themoviedb.org/3/trending/tv/day?language=en-US')
       .then(data => {
         setTopSeries(data.results);
         setLoading(false);

@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchActor} from '../redux/ActorSlice';
+import fetchApi from '../hooks/useApi';
 
 const TopPeople = ({navigation}) => {
   const [people, setPeople] = useState();
@@ -20,18 +21,20 @@ const TopPeople = ({navigation}) => {
   const actorList = useSelector(state => state.actorshow);
 
   useEffect(() => {
-    setLoading(true);
-    fetch('https://api.themoviedb.org/3/person/popular?language=en-US&page=1', {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        setPeople(data.results);
-        setLoading(false);
-      });
+    // setLoading(true);
+    // fetch('https://api.themoviedb.org/3/person/popular?language=en-US&page=1', {
+    //   headers: {
+    //     Authorization:
+    //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+    //   },
+    // })
+    //   .then(response => response.json())
+    fetchApi(
+      'https://api.themoviedb.org/3/person/popular?language=en-US&page=1',
+    ).then(data => {
+      setPeople(data.results);
+      setLoading(false);
+    });
   }, []);
 
   const addActor = useCallback(
@@ -49,23 +52,25 @@ const TopPeople = ({navigation}) => {
     });
   };
 
-  const renderItem = useCallback( ({item}) => (
-    
-    <View style={styles.item}>
-      <TouchableOpacity
-        onPress={() => {
-          handleItemPress(item);
-        }}>
-        <Image
-          source={{
-            uri: `https://image.tmdb.org/t/p/w500${item.profile_path}`,
-          }}
-          style={styles.itemImage}
-        />
-        <Text style={styles.itemText}>{item.name}</Text>
-      </TouchableOpacity>
-    </View>
-  ),[handleItemPress]);
+  const renderItem = useCallback(
+    ({item}) => (
+      <View style={styles.item}>
+        <TouchableOpacity
+          onPress={() => {
+            handleItemPress(item);
+          }}>
+          <Image
+            source={{
+              uri: `https://image.tmdb.org/t/p/w500${item.profile_path}`,
+            }}
+            style={styles.itemImage}
+          />
+          <Text style={styles.itemText}>{item.name}</Text>
+        </TouchableOpacity>
+      </View>
+    ),
+    [handleItemPress],
+  );
 
   const filterPeople =
     people && people.length > 10 ? people.slice(0, 10) : people;
@@ -114,10 +119,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container:{
-    flex: 1, 
-    backgroundColor: 'black'
-  }
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
 });
 
 export default TopPeople;

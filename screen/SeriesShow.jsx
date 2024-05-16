@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {SeriesData} from '../components/SeriesData';
+import fetchApi from '../hooks/useApi';
 
 export function SeriesShow({route, navigation}) {
   const {seriesId} = route.params;
@@ -24,35 +25,39 @@ export function SeriesShow({route, navigation}) {
   }, []);
 
   const fetchSeriesDetails = () => {
-    setLoading(true);
-    fetch(`https://api.themoviedb.org/3/tv/${seriesId}?language=en-US`, {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
+    // setLoading(true);
+    // fetch(`https://api.themoviedb.org/3/tv/${seriesId}?language=en-US`, {
+    //   headers: {
+    //     Authorization:
+    //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+    //   },
+    // })
+    //   .then(response => response.json())
+    fetchApi(`https://api.themoviedb.org/3/tv/${seriesId}?language=en-US`).then(
+      data => {
         setSeries(data);
         setLoading(false);
-      });
+      },
+    );
   };
 
   const fetchSimilar = () => {
-    fetch(
+    // fetch(
+    //   `https://api.themoviedb.org/3/tv/${seriesId}/similar?language=en-US&page=1`,
+    //   {
+    //     headers: {
+    //       Authorization:
+    //         'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+    //     },
+    //   },
+    // )
+    //   .then(response => response.json())
+    fetchApi(
       `https://api.themoviedb.org/3/tv/${seriesId}/similar?language=en-US&page=1`,
-      {
-        headers: {
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-        },
-      },
-    )
-      .then(response => response.json())
-      .then(data => {
-        setSimilar(data.results);
-        setLoading(false);
-      });
+    ).then(data => {
+      setSimilar(data.results);
+      setLoading(false);
+    });
   };
 
   const handleItemPress = item => {
@@ -147,8 +152,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container:{
+  container: {
     backgroundColor: 'black',
-    flex: 1
-  }
+    flex: 1,
+  },
 });

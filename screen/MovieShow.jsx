@@ -10,14 +10,15 @@ import {
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
-import { MovieData } from '../components/MovieData';
+import {MovieData} from '../components/MovieData';
+import fetchApi from '../hooks/useApi';
 
 export default function MovieShow({route, navigation}) {
   const {movieId} = route.params;
 
   const [movie, setMovie] = useState([]);
   const [similar, setSimilar] = useState([]);
-  const [loading,setLoading]=useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchMovieDetails();
@@ -25,14 +26,15 @@ export default function MovieShow({route, navigation}) {
   }, []);
 
   const fetchMovieDetails = () => {
-    setLoading(true);
-    fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=en-US`, {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-      },
-    })
-      .then(response => response.json())
+    // setLoading(true);
+    // fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=en-US`, {
+    //   headers: {
+    //     Authorization:
+    //       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
+    //   },
+    // })
+    //   .then(response => response.json())
+    fetchApi(`https://api.themoviedb.org/3/movie/${movieId}?language=en-US`)
       .then(data => {
         setMovie(data);
         setLoading(false);
@@ -41,17 +43,9 @@ export default function MovieShow({route, navigation}) {
   };
 
   const fetchSimilarMovies = () => {
-    setLoading(true);
-    fetch(
+    fetchApi(
       `https://api.themoviedb.org/3/movie/${movieId}/similar?language=en-US&page=1`,
-      {
-        headers: {
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDBhZWM4MjQzMmRhMGRhNjhkZTNkNGQ4Mjc3MzIxYyIsInN1YiI6IjY2MDY2NDc2MDIxY2VlMDE3YzQ3Y2ZjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RUfaXmbhCzIDelgx91TFXb9ZhJvKyh-TBipPicBRvAo',
-        },
-      },
     )
-      .then(response => response.json())
       .then(data => {
         setSimilar(data.results);
         setLoading(false);
@@ -59,12 +53,12 @@ export default function MovieShow({route, navigation}) {
       .catch(error => console.error('Error fetching similar movies:', error));
   };
 
-  const handleItemPress=(item)=>{
-    navigation.push('Show', {movieId: item.id})
-  }
+  const handleItemPress = item => {
+    navigation.push('Show', {movieId: item.id});
+  };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity onPress={() =>handleItemPress(item)}>
+    <TouchableOpacity onPress={() => handleItemPress(item)}>
       <View style={styles.item}>
         <Image
           source={{uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`}}
@@ -76,20 +70,24 @@ export default function MovieShow({route, navigation}) {
       </View>
     </TouchableOpacity>
   );
-  
+
   return (
     <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator size="large" color="#ffffff" style={styles.loadingIndicator} />
+        <ActivityIndicator
+          size="large"
+          color="#ffffff"
+          style={styles.loadingIndicator}
+        />
       ) : (
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        keyExtractor={item => item.id}
-        ListHeaderComponent={<MovieData movie={movie}/>}
-        data={similar}
-        numColumns={2}
-        renderItem={renderItem}
-      />
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          keyExtractor={item => item.id}
+          ListHeaderComponent={<MovieData movie={movie} />}
+          data={similar}
+          numColumns={2}
+          renderItem={renderItem}
+        />
       )}
     </View>
   );
@@ -98,7 +96,6 @@ export default function MovieShow({route, navigation}) {
 const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-
   movieTitle: {
     fontSize: 12,
     fontWeight: 'bold',
@@ -125,8 +122,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container:{
-    flex:1,
-    backgroundColor: 'black'
-  }
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
 });
